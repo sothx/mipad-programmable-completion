@@ -1,0 +1,8 @@
+# 这个文件将被 resetprop 读取
+# 示例: 改变 dpi
+# ro.sf.lcd_density=320
+# 开启高级材质
+persist.sys.background_blur_supported=true
+# 开启平滑圆角
+persist.sys.support_view_smoothcorner=true
+persist.sys.support_window_smoothcorner=true
