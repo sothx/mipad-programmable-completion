@@ -3,6 +3,8 @@
 # ro.sf.lcd_density=320
 # 开启高级材质1.0
 persist.sys.background_blur_supported=true
+persist.sys.background_blur_status_default=true
+persist.sys.background_blur_mode=0
 # 开启高级材质2.0
 persist.sys.background_blur_version=2
 # 开启平滑圆角
