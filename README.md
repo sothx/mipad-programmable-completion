@@ -24,7 +24,7 @@ persist.sys.background_blur_supported=true
 persist.sys.background_blur_status_default=true
 persist.sys.background_blur_mode=0
 ```
-- 开启高级材质2.0
+- 开启高级材质2.0(仅小米平板)
 ```bash
 persist.sys.background_blur_version=2
 ```
