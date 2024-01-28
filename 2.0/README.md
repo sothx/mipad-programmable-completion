@@ -42,4 +42,4 @@ settings put secure show_rotation_suggestions 0
 
 ## 其他
 
-有关模块和存储库的更多信息请查看 [Magisk 官方文档](https://topjohnwu.github.io/Magisk/guides.html)
+有关模块和存储库的更多信息请查看 [Magisk 官方文档](https://github.com/sothx/mipad-programmable-completion)

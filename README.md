@@ -58,4 +58,4 @@ settings put secure show_rotation_suggestions 0
 
 ## 其他
 
-有关模块库的更多信息请查看Github (https://github.com/sothx/mipad-magic-window)
+有关模块库的更多信息请查看Github (https://github.com/sothx/mipad-programmable-completion)
