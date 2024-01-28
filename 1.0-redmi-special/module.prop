@@ -1,7 +1,7 @@
 # id 只能填 字母 数字 半角符号
 id=mipad-programmable-completion
 name=红米平板系列功能补全
-version=V1.03.01
-versionCode=10301
+version=V1.03.02
+versionCode=10302
 author=sothx
 description=[模块版本:红米平板专版]补全红米平板系列的大文件夹、高级材质、平滑圆角及屏幕旋转建议，红米平板考虑到性能和功耗原因，仅应用高级材质1.0。(反馈模块问题可前往酷安私信 @做梦书 或者Github:https://github.com/sothx/mipad-programmable-completion)
