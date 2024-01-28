@@ -1,0 +1,13 @@
+# 这个文件将被 resetprop 读取
+# 示例: 改变 dpi
+# ro.sf.lcd_density=320
+
+# 清空系统桌面的"低内存"设备检测
+ro.config.low_ram_.threshold_gb=
+# 开启高级材质1.0
+persist.sys.background_blur_supported=true
+persist.sys.background_blur_status_default=true
+persist.sys.background_blur_mode=0
+# 开启平滑圆角
+persist.sys.support_view_smoothcorner=true
+persist.sys.support_window_smoothcorner=true

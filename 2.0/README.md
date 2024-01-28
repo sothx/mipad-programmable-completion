@@ -1,15 +1,21 @@
 # mipad-programmable-completion
 
 ## 模块简介
-该Magisk模块用于补全小米平板6系列的部分系统体验，高级材质、平滑圆角以及屏幕旋转建议。
+该Magisk模块用于补全小米平板系列的部分系统体验，目前包括高级材质、平滑圆角以及屏幕旋转建议提示按钮。
 
 ## 模块都做了什么？
 
 通过修改build.prop补全以下系统体验:
 
-- 开启高级材质
+- 开启高级材质1.0
 ```bash
 persist.sys.background_blur_supported=true
+persist.sys.background_blur_status_default=true
+persist.sys.background_blur_mode=0
+```
+- 开启高级材质2.0
+```bash
+persist.sys.background_blur_version=2
 ```
 
 - 开启平滑圆角

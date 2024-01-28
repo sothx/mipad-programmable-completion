@@ -1,7 +1,7 @@
 # mipad-programmable-completion
 
 ## 模块简介
-该Magisk模块用于补全小米平板系列的部分系统体验，目前包括高级材质、平滑圆角以及屏幕旋转建议提示按钮。
+该Magisk模块用于补全红米平板系列的部分系统体验，目前包括大文件夹、高级材质、平滑圆角以及屏幕旋转建议提示按钮。
 
 ## 模块都做了什么？
 
@@ -18,6 +18,11 @@ persist.sys.background_blur_mode=0
 ```bash
 persist.sys.support_view_smoothcorner=true
 persist.sys.support_window_smoothcorner=true
+```
+
+- 禁用系统针对低内存设备的判断(仅红米平板)
+```bash
+ro.config.low_ram_.threshold_gb=
 ```
 
 通过ADB命令补全以下系统体验:
@@ -38,4 +43,4 @@ settings put secure show_rotation_suggestions 0
 
 ## 其他
 
-有关模块和存储库的更多信息请查看 [Magisk 官方文档](https://topjohnwu.github.io/Magisk/guides.html)
+有关模块库的更多信息请查看Github (https://github.com/sothx/mipad-magic-window)
