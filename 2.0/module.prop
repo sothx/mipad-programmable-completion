@@ -1,7 +1,7 @@
 # id 只能填 字母 数字 半角符号
 id=mipad-programmable-completion
-name=小米平板6系列功能补全
-version=V2.03.00
-versionCode=20300
+name=小米平板系列功能补全
+version=V2.03.01
+versionCode=20301
 author=sothx
-description=（该版本为高级材质2.0专版）补全小米平板6系列的高级材质、平滑圆角及屏幕旋转建议，切换高级材质版本需要在[显示与亮度-高级材质]中关闭并重新开启才会生效。(反馈模块问题可前往酷安私信 @做梦书 或者Github:https://github.com/sothx/mipad-programmable-completion)
+description=[模块版本:高级材质2.0专版]补全小米平板系列的高级材质、平滑圆角及屏幕旋转建议，切换高级材质版本需要在[显示与亮度-高级材质]中关闭并重新开启才会生效。(反馈模块问题可前往酷安私信 @做梦书 或者Github:https://github.com/sothx/mipad-programmable-completion)
