@@ -13,7 +13,7 @@ persist.sys.background_blur_supported=true
 persist.sys.background_blur_status_default=true
 persist.sys.background_blur_mode=0
 ```
-- 开启高级材质2.0(仅小米平板)
+- 开启高级材质2.0
 ```bash
 persist.sys.background_blur_version=2
 ```
@@ -22,6 +22,12 @@ persist.sys.background_blur_version=2
 ```bash
 persist.sys.support_view_smoothcorner=true
 persist.sys.support_window_smoothcorner=true
+```
+
+- 开启进游戏三倍速
+```bash
+debug.game.video.support=true
+debug.game.video.speed=true
 ```
 
 - 禁用系统针对低内存设备的判断(仅红米平板)

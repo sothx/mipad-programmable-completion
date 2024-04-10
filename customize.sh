@@ -70,6 +70,22 @@ else
   settings put secure show_rotation_suggestions 0
 fi
 
+# 开启进游戏三倍速
+ui_print "*********************************************"
+ui_print "- 是否开启进游戏三倍速"
+ui_print "  音量+ ：是"
+ui_print "  音量- ：否"
+ui_print "*********************************************"
+key_check
+if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+  ui_print "- 已开启进游戏三倍速"
+  add_props "# 开启平滑圆角"
+  add_props "debug.game.video.support=true"
+  add_props "debug.game.video.speed=true"
+else
+  ui_print "- 你选择不开启进游戏三倍速"
+fi
+
 # 开启平滑圆角
 ui_print "*********************************************"
 ui_print "- 是否开启平滑圆角"
@@ -121,5 +137,5 @@ if [[ "$API" -eq 34 ]]; then
 fi
 resetprop -f "$MODPATH"/system.prop
 ui_print "*********************************************"
-ui_print " 功能具体支持情况以系统为准"
+ui_print "- 功能具体支持情况以系统为准"
 ui_print "*********************************************"
