@@ -1,0 +1,21 @@
+# Auto detect text files and perform LF normalization
+# From https://github.com/alexkaratarakis/gitattributes
+# Powered By https://www.richie-bendall.ml/gitattributes-generator/
+* text=auto
+
+.gitattributes text eol=lf
+
+
+# 脚本文件
+*.sh text eol=lf
+
+# META-INF目录下的脚本文件
+META-INF/com/google/android/* text eol=lf
+
+# 模块属性文件
+*.prop text eol=lf
+
+# Markdown文件
+*.md text diff=markdown eol=lf
+
+.gitattributes export-ignore
