@@ -55,6 +55,21 @@ if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
   add_props "ro.config.low_ram_.threshold_gb="
 fi
 
+# 开启屏幕旋转建议
+ui_print "*********************************************"
+ui_print "- 是否开启屏幕旋转建议"
+ui_print "  音量+ ：是"
+ui_print "  音量- ：否"
+ui_print "*********************************************"
+key_check
+if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+  ui_print "已开启屏幕旋转建议"
+  settings put secure show_rotation_suggestions 1
+else
+  ui_print "- 你选择不开启屏幕旋转建议"
+  settings put secure show_rotation_suggestions 0
+fi
+
 # 开启平滑圆角
 ui_print "*********************************************"
 ui_print "- 是否开启平滑圆角"
