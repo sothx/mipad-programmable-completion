@@ -50,7 +50,7 @@ ui_print "  音量- ：否"
 ui_print "*********************************************"
 key_check
 if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-  ui_print "已清空系统桌面的低内存设备检测"
+  ui_print "- 已清空系统桌面的低内存设备检测"
   add_props "# 清空系统桌面的\"低内存\"设备检测"
   add_props "ro.config.low_ram_.threshold_gb="
 fi
@@ -63,7 +63,7 @@ ui_print "  音量- ：否"
 ui_print "*********************************************"
 key_check
 if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-  ui_print "已开启屏幕旋转建议"
+  ui_print "- 已开启屏幕旋转建议"
   settings put secure show_rotation_suggestions 1
 else
   ui_print "- 你选择不开启屏幕旋转建议"
@@ -78,7 +78,7 @@ ui_print "  音量- ：否"
 ui_print "*********************************************"
 key_check
 if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-  ui_print "已开启平滑圆角"
+  ui_print "- 已开启平滑圆角"
   add_props "# 开启平滑圆角"
   add_props "persist.sys.support_view_smoothcorner=true"
   add_props "persist.sys.support_window_smoothcorner=true"
@@ -95,7 +95,7 @@ if [[ "$API" -eq 34 ]]; then
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "已开启高级材质1.0"
+    ui_print "- 已开启高级材质1.0"
     add_props "# 开启高级材质1.0"
     add_props "persist.sys.background_blur_supported=true"
     add_props "persist.sys.background_blur_status_default=true"
@@ -107,7 +107,7 @@ if [[ "$API" -eq 34 ]]; then
     ui_print "*********************************************"
     key_check
     if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-      ui_print "已开启高级材质2.0"
+      ui_print "- 已开启高级材质2.0"
       add_props "# 开启高级材质2.0"
       add_props "persist.sys.background_blur_version=2"
     else
