@@ -1,18 +1,7 @@
 # mipad-programmable-completion
 
 ## 模块简介
-该Magisk模块用于补全小米平板、红米平板系列的部分系统体验。
-
-小米平板补全功能列表：
-- 高级材质1.0/高级材质2.0
-- 平滑圆角
-- 屏幕旋转建议提示按钮
-
-红米平板补全功能列表:
-- 大文件夹(四宫格)
-- 高级材质1.0
-- 平滑圆角
-- 屏幕旋转建议提示按钮
+该Magisk模块用于补全小米/红米平板系列的部分系统体验，目前包括大文件夹、高级材质、平滑圆角以及屏幕旋转建议提示按钮。
 
 ## 模块都做了什么？
 
@@ -24,7 +13,7 @@ persist.sys.background_blur_supported=true
 persist.sys.background_blur_status_default=true
 persist.sys.background_blur_mode=0
 ```
-- 开启高级材质2.0(仅小米平板)
+- 开启高级材质2.0
 ```bash
 persist.sys.background_blur_version=2
 ```
