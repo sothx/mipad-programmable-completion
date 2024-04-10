@@ -79,7 +79,7 @@ ui_print "*********************************************"
 key_check
 if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
   ui_print "- 已开启进游戏三倍速"
-  add_props "# 开启平滑圆角"
+  add_props "# 开启进游戏三倍速"
   add_props "debug.game.video.support=true"
   add_props "debug.game.video.speed=true"
 else
