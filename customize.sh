@@ -57,7 +57,7 @@ if [[ "$device_type" == "redmi" ]]; then
   ui_print "- 已清空系统桌面的低内存设备检测"
   add_props "# 清空系统桌面的\"低内存\"设备检测"
   add_props "ro.config.low_ram_.threshold_gb="
-  ui_print "- 已强开工作台模式（需搭配\"星旅\"添加工作台磁贴）"
+  ui_print "- 已强开工作台模式（需搭配\"星旅\"添加工作台磁贴，可在本模块Github主页的README获取下载地址）"
   add_props "# 强开工作台模式"
   add_props "ro.config.miui_desktop_mode_enabled=true"
 fi
