@@ -44,8 +44,8 @@ ro.config.miui_desktop_mode_enabled=true
 https://caiyun.139.com/m/i?135CmnIeqzokl
 (登录后下载不限速)
 
-工作台模式磁贴开启指引：
-在Magisk授予授予"星旅"Root权限-控制中心找到"工作台模式"-添加磁贴-完成
+红米平板工作台模式磁贴添加指引：
+在Magisk授予"星旅"Root权限-控制中心找到"工作台模式"-添加磁贴-完成
 
 
 通过ADB命令补全以下系统体验:
