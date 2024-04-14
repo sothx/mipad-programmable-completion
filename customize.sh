@@ -15,6 +15,15 @@ fi
 # 环境配置
 touch "$MODPATH"/system.prop
 rm -rf /data/system/package_cache
+model="$(getprop ro.product.device)"
+redmi_pad_list="xun dizi yunluo"
+device_type=xiaomi
+for i in $redmi_pad_list; do
+  if [[ "$model" == "$i" ]]; then
+    device_type=redmi
+    break
+  fi
+done
 
 # 基础函数
 add_props() {
@@ -43,13 +52,8 @@ key_check() {
 }
 
 # 红米平板判断
-ui_print "*********************************************"
-ui_print "- 你的设备是否属于红米平板系列"
-ui_print "  音量+ ：是"
-ui_print "  音量- ：否"
-ui_print "*********************************************"
-key_check
-if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+if [[ "$device_type" == "redmi" ]]; then
+  ui_print "- 你的设备属于红米平板系列"
   ui_print "- 已清空系统桌面的低内存设备检测"
   add_props "# 清空系统桌面的\"低内存\"设备检测"
   add_props "ro.config.low_ram_.threshold_gb="
