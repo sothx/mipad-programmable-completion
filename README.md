@@ -48,6 +48,8 @@ https://caiyun.139.com/m/i?135CmnIeqzokl
 在Magisk授予授予"星旅"Root权限-控制中心找到"工作台模式"-添加磁贴-完成
 
 
+
+
 通过ADB命令补全以下系统体验:
 
 - 开启屏幕旋转建议
