@@ -1,7 +1,7 @@
 # mipad-programmable-completion
 
 ## 模块简介
-该Magisk模块用于补全小米/红米平板系列的部分系统体验，目前包括大文件夹、工作台模式、进游戏三倍速、高级材质、平滑圆角以及屏幕旋转建议提示按钮。
+该Magisk模块用于补全小米/红米平板系列的部分系统体验，目前包括大文件夹、恢复工作台默认行为、进游戏三倍速、高级材质、平滑圆角以及屏幕旋转建议提示按钮。
 
 ## 模块都做了什么？
 
@@ -35,7 +35,7 @@ debug.game.video.speed=true
 ro.config.low_ram_.threshold_gb=
 ```
 
-- 强开工作台模式(仅红米平板，需额外搭配"星旅"添加工作台磁贴)
+- 恢复工作台默认行为(仅红米平板，需额外搭配"星旅"添加工作台磁贴)
 ```bash
 ro.config.miui_desktop_mode_enabled=true
 ```

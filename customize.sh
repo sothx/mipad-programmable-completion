@@ -57,9 +57,24 @@ if [[ "$device_type" == "redmi" ]]; then
   ui_print "- 已清空系统桌面的低内存设备检测"
   add_props "# 清空系统桌面的\"低内存\"设备检测"
   add_props "ro.config.low_ram_.threshold_gb="
-  ui_print "- 已强开工作台模式（需搭配\"星旅\"添加工作台磁贴，可在本模块Github主页的README获取下载地址）"
-  add_props "# 强开工作台模式"
+  # 恢复工作台默认行为
+  add_props "# 恢复工作台默认行为"
   add_props "ro.config.miui_desktop_mode_enabled=true"
+  ui_print "*********************************************"
+  ui_print "- 已经恢复工作台默认行为"
+  ui_print "- （如需要使用工作台模式，仍需搭配\"星旅\"添加工作台磁贴，是否需要了解该应用的获取和使用方式?）"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 星旅网盘下载地址： https://caiyun.139.com/m/i?135CmnIeqzokl (登录后下载不限速)"
+    ui_print "- 红米平板工作台模式磁贴添加指引："
+    ui_print "- 在Magisk授予星旅Root权限(不需要在LSPosed激活模块)-控制中心找到工作台模式-添加磁贴-完成"
+  else
+    ui_print "- 你选择不了解如何添加工作台磁贴"
+    ui_print "- 请注意，如果没有添加工作台磁贴，工作台模式仍然无法正常开启"
+  fi
 fi
 
 # 开启屏幕旋转建议
