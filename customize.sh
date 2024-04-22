@@ -54,6 +54,7 @@ key_check() {
 # 红米平板判断
 if [[ "$device_type" == "redmi" ]]; then
   ui_print "- 你的设备属于红米平板系列"
+  # 清空系统桌面低内存设备检测
   ui_print "- 已清空系统桌面的低内存设备检测"
   add_props "# 清空系统桌面的\"低内存\"设备检测"
   add_props "ro.config.low_ram_.threshold_gb="
