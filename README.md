@@ -1,7 +1,7 @@
 # mipad-programmable-completion
 
 ## 模块简介
-该Magisk模块用于补全小米/红米平板系列的部分系统体验，目前包括大文件夹、恢复工作台默认行为、进游戏三倍速、高级材质、平滑圆角以及屏幕旋转建议提示按钮。
+该Magisk模块用于补全小米/红米平板系列的部分系统体验，目前包括大文件夹、恢复工作台默认行为、进游戏三倍速、高级材质、平滑圆角、极致模式以及屏幕旋转建议提示按钮。
 
 ## 模块都做了什么？
 
@@ -57,6 +57,11 @@ https://caiyun.139.com/m/i?135CmnIeqzokl
 settings put secure show_rotation_suggestions 1
 ```
 
+- 开启极致模式
+```bash
+settings put secure speed_mode_enable 1
+```
+
 ## 模块注意事项
 如果不需要屏幕旋转建议可以手动关闭，通过MT管理器的终端模拟器输入如下命令:
 
@@ -64,6 +69,12 @@ settings put secure show_rotation_suggestions 1
 ```bash
 su
 settings put secure show_rotation_suggestions 0
+```
+
+- 关闭极致模式
+```bash
+su
+settings put secure speed_mode_enable 0
 ```
 
 ## 其他

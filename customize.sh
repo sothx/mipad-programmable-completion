@@ -93,6 +93,22 @@ else
   settings put secure show_rotation_suggestions 0
 fi
 
+# 开启极致模式
+ui_print "*********************************************"
+ui_print "- 是否开启极致模式"
+ui_print "  音量+ ：是"
+ui_print "  音量- ：否"
+ui_print "*********************************************"
+key_check
+if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+  ui_print "- 已开启极致模式"
+  ui_print "- 极致模式的设置路径位于[开发者选项-极致模式]"
+  settings put secure speed_mode_enable 1
+else
+  ui_print "- 你选择不开启极致模式"
+  settings put secure speed_mode_enable 0
+fi
+
 # 开启进游戏三倍速
 ui_print "*********************************************"
 ui_print "- 是否开启进游戏三倍速"
