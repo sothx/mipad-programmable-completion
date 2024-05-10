@@ -58,10 +58,6 @@ if [[ "$device_type" == "redmi" ]]; then
   ui_print "- 已清空系统桌面的低内存设备检测"
   add_props "# 清空系统桌面的\"低内存\"设备检测"
   add_props "ro.config.low_ram_.threshold_gb="
-  # 默认开启阴影效果
-  ui_print "- 开启阴影效果"
-  add_props "# 开启阴影效果"
-  add_props "persist.sys.mi_shadow_supported=true"
   # 恢复工作台默认行为
   add_props "# 恢复工作台默认行为"
   add_props "ro.config.miui_desktop_mode_enabled=true"
@@ -79,6 +75,34 @@ if [[ "$device_type" == "redmi" ]]; then
   else
     ui_print "- 你选择不了解如何添加工作台磁贴"
     ui_print "- 请注意，如果没有添加工作台磁贴，工作台模式仍然无法正常开启"
+  fi
+  # 开启部分阴影效果
+  ui_print "*********************************************"
+  ui_print "- 是否开启部分阴影效果"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 已开启部分阴影效果"
+    add_props "# 开启部分阴影效果"
+    add_props "persist.sys.mi_shadow_supported=true"
+  else
+    ui_print "- 你选择不开启部分阴影效果"
+  fi
+  # 开启双线程动画
+  ui_print "*********************************************"
+  ui_print "- 是否开启双线程动画"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 已开启双线程动画"
+    add_props "# 开启双线程动画"
+    add_props "persist.sys.miui_animator_sched.sched_threads=2"
+  else
+    ui_print "- 你选择不开启双线程动画"
   fi
 fi
 
