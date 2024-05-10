@@ -58,6 +58,10 @@ if [[ "$device_type" == "redmi" ]]; then
   ui_print "- 已清空系统桌面的低内存设备检测"
   add_props "# 清空系统桌面的\"低内存\"设备检测"
   add_props "ro.config.low_ram_.threshold_gb="
+  # 默认开启阴影效果
+  ui_print "- 开启阴影效果"
+  add_props "# 开启阴影效果"
+  add_props "persist.sys.mi_shadow_supported=true"
   # 恢复工作台默认行为
   add_props "# 恢复工作台默认行为"
   add_props "ro.config.miui_desktop_mode_enabled=true"
