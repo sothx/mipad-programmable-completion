@@ -118,7 +118,7 @@ fi
 # 骁龙8+Gen1机型判断
 if [[ "$device_soc" == "SM8475" ]]; then
   ui_print "- 你的设备处理器属于骁龙8+Gen1"
-  # 清空系统桌面低内存设备检测
+  # 已开启智能IO调度
   ui_print "- 已开启智能IO调度"
   add_props "# 开启智能IO调度"
   add_props "persist.sys.stability.smartfocusio=on"
