@@ -93,11 +93,11 @@ if [[ "$device_type" == "redmi" ]]; then
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "- 已开启部分阴影效果"
-    add_props "# 开启部分阴影效果"
+    ui_print "- 已开启柔和阴影效果"
+    add_props "# 开启柔和阴影效果"
     add_props "persist.sys.mi_shadow_supported=true"
   else
-    ui_print "- 你选择不开启部分阴影效果"
+    ui_print "- 你选择不开启柔和阴影效果"
   fi
   # 开启双线程动画
   ui_print "*********************************************"
