@@ -25,6 +25,15 @@ for i in $redmi_pad_list; do
   fi
 done
 
+device_soc=""
+soc_sm8475_pad_list="liuqin yudi"
+for i in $soc_SM8475_pad_list; do
+  if [[ "$model" == "$i" ]]; then
+    device_soc=SM8475
+    break
+  fi
+done
+
 # 基础函数
 add_props() {
   local line="$1"
@@ -106,6 +115,15 @@ if [[ "$device_type" == "redmi" ]]; then
   fi
 fi
 
+# 骁龙8+Gen1机型判断
+if [[ "$device_soc" == "SM8475" ]]; then
+  ui_print "- 你的设备处理器属于骁龙8+Gen1"
+  # 清空系统桌面低内存设备检测
+  ui_print "- 已开启智能IO调度"
+  add_props "# 开启智能IO调度"
+  add_props "persist.sys.stability.smartfocusio=on"
+fi
+
 # 开启屏幕旋转建议
 ui_print "*********************************************"
 ui_print "- 是否开启屏幕旋转建议"
@@ -137,6 +155,21 @@ else
   settings put secure speed_mode_enable 0
 fi
 
+# 游戏显示布局
+ui_print "*********************************************"
+ui_print "- 是否开启游戏显示布局"
+ui_print "  音量+ ：是"
+ui_print "  音量- ：否"
+ui_print "*********************************************"
+key_check
+if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+  ui_print "- 已开启游戏显示布局"
+  settings put secure show_rotation_suggestions 1
+else
+  ui_print "- 你选择不开启游戏显示布局"
+  settings put secure show_rotation_suggestions 0
+fi
+
 # 开启进游戏三倍速
 ui_print "*********************************************"
 ui_print "- 是否开启进游戏三倍速"
@@ -151,6 +184,22 @@ if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
   add_props "debug.game.video.speed=true"
 else
   ui_print "- 你选择不开启进游戏三倍速"
+fi
+
+# 开启游戏布局优化
+ui_print "*********************************************"
+ui_print "- 是否开启游戏显示布局"
+ui_print "  音量+ ：是"
+ui_print "  音量- ：否"
+ui_print "*********************************************"
+key_check
+if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+  ui_print "- 已开启游戏显示布局"
+  add_props "# 开启游戏显示布局"
+  add_props "ro.config.miui_compat_enable=true"
+  add_props "ro.config.miui_appcompat_enable=true"
+else
+  ui_print "- 你选择不开启游戏显示布局"
 fi
 
 # 开启平滑圆角
