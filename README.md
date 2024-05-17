@@ -1,7 +1,7 @@
 # mipad-programmable-completion
 
 ## 模块简介
-该Magisk模块用于补全小米/红米平板系列的部分系统体验，目前包括大文件夹、恢复工作台默认行为、进游戏三倍速、高级材质、平滑圆角、极致模式以及屏幕旋转建议提示按钮等。
+该Magisk模块用于补全小米/红米平板系列的部分系统体验，主要包括进游戏三倍速、高级材质、平滑圆角、极致模式以及屏幕旋转建议提示按钮等。
 
 ## 模块都做了什么？
 
@@ -47,7 +47,7 @@ https://caiyun.139.com/m/i?135CmnIeqzokl
 红米平板工作台模式磁贴添加指引：
 在Magisk授予"星旅"Root权限(不需要在LSPosed激活模块)-控制中心找到"工作台模式"-添加磁贴-完成
 
-- 开启部分阴影效果(仅红米平板)
+- 开启柔和阴影效果(仅红米平板)
 ```bash
 persist.sys.mi_shadow_supported=true
 ```
@@ -55,6 +55,11 @@ persist.sys.mi_shadow_supported=true
 - 开启双线程动画(仅红米平板)
 ```bash
 persist.sys.miui_animator_sched.sched_threads=2
+```
+
+- 开启智能IO调度(仅骁龙8+Gen1机型)
+```bash
+persist.sys.stability.smartfocusio=on
 ```
 
 
