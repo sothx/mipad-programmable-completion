@@ -26,7 +26,7 @@ for i in $redmi_pad_list; do
 done
 
 device_soc=
-soc_SM8475_pad_list="liuqin yudi"
+soc_SM8475_pad_list="liuqin yudi zizhan"
 for j in $soc_SM8475_pad_list; do
   if [[ "$model" == "$j" ]]; then
     device_soc=SM8475
