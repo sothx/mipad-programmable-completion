@@ -18,6 +18,8 @@ rm -rf /data/system/package_cache
 model="$(getprop ro.product.device)"
 redmi_pad_list="xun dizi yunluo"
 device_type=xiaomi
+device_soc_name="$(getprop ro.vendor.qti.soc_name)"
+device_soc_model="$(getprop ro.vendor.qti.soc_model)"
 for i in $redmi_pad_list; do
   if [[ "$model" == "$i" ]]; then
     device_type=redmi
@@ -25,14 +27,7 @@ for i in $redmi_pad_list; do
   fi
 done
 
-device_soc=
-soc_SM8475_pad_list="liuqin yudi zizhan"
-for j in $soc_SM8475_pad_list; do
-  if [[ "$model" == "$j" ]]; then
-    device_soc=SM8475
-    break
-  fi
-done
+
 
 # 基础函数
 add_props() {
@@ -116,12 +111,24 @@ if [[ "$device_type" == "redmi" ]]; then
 fi
 
 # 骁龙8+Gen1机型判断
-if [[ "$device_soc" == "SM8475" ]]; then
-  ui_print "- 你的设备处理器属于骁龙8+Gen1"
-  # 已开启智能IO调度
-  ui_print "- 已开启智能IO调度(Android 14+ 生效)"
-  add_props "# 开启智能IO调度"
-  add_props "persist.sys.stability.smartfocusio=on"
+if [[ "$device_soc_model" == "SM8475" && "$device_soc_name" == "cape"]]; then
+  # 智能IO调度
+  ui_print "*********************************************"
+  ui_print "- 检测到你的设备处理器属于骁龙8+Gen1"
+  ui_print "- 目前骁龙8+Gen1机型的小米平板存在系统IO调度异常的问题，容易导致系统卡顿或者无响应，模块将自动为你配置合适的IO调度规则"
+  ui_print "- 是否开启智能IO调度"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    # 已开启智能IO调度
+    ui_print "- 已开启智能IO调度(Android 14+ 生效)"
+    add_props "# 开启智能IO调度"
+    add_props "persist.sys.stability.smartfocusio=on"
+  else
+    ui_print "- 你选择不开启智能IO调度"
+  fi
 fi
 
 # 开启屏幕旋转建议
