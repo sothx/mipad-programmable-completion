@@ -190,6 +190,26 @@ if [[ "$is_need_patch_120hz_fps" == 1 ]]; then
   fi
 fi
 
+# 解锁节律护眼
+ui_print "*********************************************"
+ui_print "- 是否解锁节律护眼(Hyper OS 生效)"
+ui_print "  音量+ ：是"
+ui_print "  音量- ：否"
+ui_print "*********************************************"
+key_check
+if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+  if [[ "$has_been_patch_device_features" == 0 ]]; then
+    has_been_patch_device_features=1
+    patch_device_features $MODPATH
+    add_post_fs_data 'patch_device_features $MODDIR'
+  fi
+  patch_eyecare_mode $MODPATH
+  add_post_fs_data 'patch_eyecare_mode $MODDIR'
+  ui_print "- 已解锁节律护眼(Hyper OS 生效)"
+else
+  ui_print "- 你选择不解锁节律护眼"
+fi
+
 # 开启屏幕旋转建议
 ui_print "*********************************************"
 ui_print "- 是否开启屏幕旋转建议"
