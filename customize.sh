@@ -15,14 +15,25 @@ fi
 # 环境配置
 touch "$MODPATH"/system.prop
 rm -rf /data/system/package_cache
-model="$(getprop ro.product.device)"
+device_code="$(getprop ro.product.device)"
 device_soc_name="$(getprop ro.vendor.qti.soc_name)"
 device_soc_model="$(getprop ro.vendor.qti.soc_model)"
+has_been_patch_device_features=false
+# 红米平板判断
 redmi_pad_list="xun dizi yunluo"
 device_type=xiaomi
 for i in $redmi_pad_list; do
-  if [[ "$model" == "$i" ]]; then
+  if [[ "$device_code" == "$i" ]]; then
     device_type=redmi
+    break
+  fi
+done
+# 补全120hz判断
+need_patch_120hz_fps_pad_list="pipa liuqin sheng"
+is_need_patch_120hz_fps=false
+for i in $need_patch_120hz_fps_pad_list; do
+  if [[ "$device_code" == "$i" ]]; then
+    is_need_patch_120hz_fps=true
     break
   fi
 done
@@ -33,6 +44,11 @@ done
 add_props() {
   local line="$1"
   echo "$line" >>"$MODPATH"/system.prop
+}
+
+add_post-fs-data() {
+  local line="$1"
+  echo "$line" >>"$MODPATH"/post-fs-data.sh
 }
 
 key_check() {
@@ -128,6 +144,48 @@ if [[ "$device_type" == "redmi" ]]; then
     add_props "persist.sys.miui_animator_sched.sched_threads=2"
   else
     ui_print "- 你选择不开启双线程动画"
+  fi
+fi
+
+# 解锁熄屏挂机/熄屏看剧
+ui_print "*********************************************"
+ui_print "- 是否解锁熄屏挂机/熄屏看剧"
+ui_print "  音量+ ：是"
+ui_print "  音量- ：否"
+ui_print "*********************************************"
+key_check
+if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+  ui_print "- 已解锁熄屏挂机/熄屏看剧"
+  if [[ "$has_been_patch_device_features" == "false" ]]; then
+    ui_print "- 正在修补设备特性"
+    patch_device_features $MODPATH
+    add_post-fs-data 'patch_device_features $MODDIR'
+  fi
+  patch_remove_screen_off_hold_on  $MODPATH
+  add_post-fs-data 'patch_remove_screen_off_hold_on $MODPATH'
+else
+  ui_print "- 你选择不解锁熄屏挂机/熄屏看剧"
+fi
+
+# 解锁120hz
+if [[ "$is_need_patch_120hz_fps" == "true" ]]; then
+  ui_print "*********************************************"
+  ui_print "- 是否解锁120hz高刷"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    if [[ "$has_been_patch_device_features" == "false" ]]; then
+      ui_print "- 正在修补设备特性"
+      patch_device_features $MODPATH
+      add_post-fs-data 'patch_device_features $MODDIR'
+    fi
+    patch_120hz_fps  $MODPATH
+    add_post-fs-data 'patch_120hz_fps $MODPATH'
+    ui_print "- 已解锁120hz高刷"
+  else
+    ui_print "- 你选择不解锁120hz高刷"
   fi
 fi
 
