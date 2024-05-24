@@ -163,7 +163,7 @@ if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
     add_post_fs_data 'patch_device_features $MODDIR'
   fi
   patch_remove_screen_off_hold_on  $MODPATH
-  add_post_fs_data 'patch_remove_screen_off_hold_on $MODPATH'
+  add_post_fs_data 'patch_remove_screen_off_hold_on $MODDIR'
 else
   ui_print "- 你选择不解锁熄屏挂机/熄屏看剧"
 fi
@@ -183,7 +183,7 @@ if [[ "$is_need_patch_120hz_fps" == 1 ]]; then
       add_post_fs_data 'patch_device_features $MODDIR'
     fi
     patch_120hz_fps $MODPATH
-    add_post_fs_data 'patch_120hz_fps $MODPATH'
+    add_post_fs_data 'patch_120hz_fps $MODDIR'
     ui_print "- 已解锁120hz高刷"
   else
     ui_print "- 你选择不解锁120hz高刷"
