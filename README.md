@@ -92,4 +92,6 @@ settings put secure speed_mode_enable 0
 
 ## 其他
 
+《小米平板功能补全计划》允许个人在非盈利用途下的安装和使用本Magisk模块，禁止用于任何商业性或其他未经许可用途，作为项目的主要维护者将保留对项目的所有权利。
+
 有关模块库的更多信息请查看Github (https://github.com/sothx/mipad-programmable-completion)
