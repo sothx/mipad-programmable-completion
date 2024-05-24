@@ -47,9 +47,9 @@ add_props() {
   echo "$line" >>"$MODPATH"/system.prop
 }
 
-add_post-fs-data() {
+add_post_fs_data() {
   local line="$1"
-  echo "$line" >>"$MODPATH"/post-fs-data.sh
+  printf "\n$line\n" >>"$MODPATH"/post-fs-data.sh
 }
 
 key_check() {
@@ -158,13 +158,12 @@ key_check
 if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
   ui_print "- 已解锁熄屏挂机/熄屏看剧"
   if [[ "$has_been_patch_device_features" == 0 ]]; then
-    ui_print "- 正在修补设备特性"
     has_been_patch_device_features=1
     patch_device_features $MODPATH
-    add_post-fs-data 'patch_device_features $MODDIR'
+    add_post_fs_data 'patch_device_features $MODDIR'
   fi
   patch_remove_screen_off_hold_on  $MODPATH
-  add_post-fs-data 'patch_remove_screen_off_hold_on $MODPATH'
+  add_post_fs_data 'patch_remove_screen_off_hold_on $MODPATH'
 else
   ui_print "- 你选择不解锁熄屏挂机/熄屏看剧"
 fi
@@ -179,13 +178,12 @@ if [[ "$is_need_patch_120hz_fps" == 1 ]]; then
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
     if [[ "$has_been_patch_device_features" == 0 ]]; then
-      ui_print "- 正在修补设备特性"
       has_been_patch_device_features=1
       patch_device_features $MODPATH
-      add_post-fs-data 'patch_device_features $MODDIR'
+      add_post_fs_data 'patch_device_features $MODDIR'
     fi
-    patch_120hz_fps  $MODPATH
-    add_post-fs-data 'patch_120hz_fps $MODPATH'
+    patch_120hz_fps $MODPATH
+    add_post_fs_data 'patch_120hz_fps $MODPATH'
     ui_print "- 已解锁120hz高刷"
   else
     ui_print "- 你选择不解锁120hz高刷"
