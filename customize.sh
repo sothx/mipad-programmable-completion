@@ -1,4 +1,5 @@
 SKIPUNZIP=0
+. "$MODPATH"/util_functions.sh
 
 if [[ "$KSU" == "true" ]]; then
   ui_print "- KernelSU 用户空间当前的版本号: $KSU_VER_CODE"
@@ -18,7 +19,7 @@ rm -rf /data/system/package_cache
 device_code="$(getprop ro.product.device)"
 device_soc_name="$(getprop ro.vendor.qti.soc_name)"
 device_soc_model="$(getprop ro.vendor.qti.soc_model)"
-has_been_patch_device_features=false
+has_been_patch_device_features=0
 # 红米平板判断
 redmi_pad_list="xun dizi yunluo"
 device_type=xiaomi
@@ -30,10 +31,10 @@ for i in $redmi_pad_list; do
 done
 # 补全120hz判断
 need_patch_120hz_fps_pad_list="pipa liuqin sheng"
-is_need_patch_120hz_fps=false
-for i in $need_patch_120hz_fps_pad_list; do
-  if [[ "$device_code" == "$i" ]]; then
-    is_need_patch_120hz_fps=true
+is_need_patch_120hz_fps=0
+for j in $need_patch_120hz_fps_pad_list; do
+  if [[ "$device_code" == "$j" ]]; then
+    is_need_patch_120hz_fps=1
     break
   fi
 done
@@ -156,8 +157,9 @@ ui_print "*********************************************"
 key_check
 if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
   ui_print "- 已解锁熄屏挂机/熄屏看剧"
-  if [[ "$has_been_patch_device_features" == "false" ]]; then
+  if [[ "$has_been_patch_device_features" == 0 ]]; then
     ui_print "- 正在修补设备特性"
+    has_been_patch_device_features=1
     patch_device_features $MODPATH
     add_post-fs-data 'patch_device_features $MODDIR'
   fi
@@ -168,7 +170,7 @@ else
 fi
 
 # 解锁120hz
-if [[ "$is_need_patch_120hz_fps" == "true" ]]; then
+if [[ "$is_need_patch_120hz_fps" == 1 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否解锁120hz高刷"
   ui_print "  音量+ ：是"
@@ -176,8 +178,9 @@ if [[ "$is_need_patch_120hz_fps" == "true" ]]; then
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    if [[ "$has_been_patch_device_features" == "false" ]]; then
+    if [[ "$has_been_patch_device_features" == 0 ]]; then
       ui_print "- 正在修补设备特性"
+      has_been_patch_device_features=1
       patch_device_features $MODPATH
       add_post-fs-data 'patch_device_features $MODDIR'
     fi
