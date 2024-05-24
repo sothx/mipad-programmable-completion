@@ -148,15 +148,15 @@ if [[ "$device_type" == "redmi" ]]; then
   fi
 fi
 
-# 解锁熄屏挂机/熄屏看剧
+# 解锁熄屏挂机/熄屏听剧
 ui_print "*********************************************"
-ui_print "- 是否解锁熄屏挂机/熄屏看剧"
+ui_print "- 是否解锁熄屏挂机/熄屏听剧"
 ui_print "  音量+ ：是"
 ui_print "  音量- ：否"
 ui_print "*********************************************"
 key_check
 if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-  ui_print "- 已解锁熄屏挂机/熄屏看剧"
+  ui_print "- 已解锁熄屏挂机/熄屏听剧"
   if [[ "$has_been_patch_device_features" == 0 ]]; then
     has_been_patch_device_features=1
     patch_device_features $MODPATH
@@ -165,7 +165,7 @@ if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
   patch_remove_screen_off_hold_on  $MODPATH
   add_post_fs_data 'patch_remove_screen_off_hold_on $MODDIR'
 else
-  ui_print "- 你选择不解锁熄屏挂机/熄屏看剧"
+  ui_print "- 你选择不解锁熄屏挂机/熄屏听剧"
 fi
 
 # 解锁120hz
