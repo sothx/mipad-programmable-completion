@@ -229,18 +229,24 @@ if [[ "$is_need_patch_eyecare_mode" == 1 && "$API" -ge 34  ]]; then
   fi
 fi
 
-# 开启屏幕旋转建议
+# 开启屏幕旋转建议提示按钮
 ui_print "*********************************************"
-ui_print "- 是否开启屏幕旋转建议"
+ui_print "- 是否开启屏幕旋转建议提示按钮"
+if [[ "$API" -le 33  ]]; then
+  ui_print "- 此功能无法与\"隐藏手势提示线\"共存"
+fi
 ui_print "  音量+ ：是"
 ui_print "  音量- ：否"
 ui_print "*********************************************"
 key_check
 if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-  ui_print "- 已开启屏幕旋转建议"
+  ui_print "- 已开启屏幕旋转建议提示按钮"
+  if [[ "$API" -le 33  ]]; then
+    ui_print "- 你已选择知晓此功能无法与\"隐藏手势提示线\"共存"
+  fi
   settings put secure show_rotation_suggestions 1
 else
-  ui_print "- 你选择不开启屏幕旋转建议"
+  ui_print "- 你选择不开启屏幕旋转建议提示按钮"
   settings put secure show_rotation_suggestions 0
 fi
 
@@ -292,16 +298,23 @@ else
   ui_print "- 你选择不解锁\"游戏音质优化\"开关"
 fi
 
-if [[ "$API" -le 33  ]]; then
+is_show_rotation_suggestions="$(settings get secure show_rotation_suggestions)"
+if [[ "$API" -le 33 && "$is_show_rotation_suggestions" == 0  ]]; then
   # 隐藏手势提示线
   ui_print "*********************************************"
   ui_print "- 是否隐藏手势提示线"
+  if [[ "$API" -le 33  ]]; then
+    ui_print "- 此功能无法与\"旋转建议提示按钮\"共存"
+  fi
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
     ui_print "- 已隐藏手势提示线"
+    if [[ "$API" -le 33  ]]; then
+      ui_print "- 您已选择知晓此功能无法与\"旋转建议提示按钮\"共存"
+    fi
     settings put global hide_gesture_line 1
   else
     ui_print "- 你选择不隐藏手势提示线"
