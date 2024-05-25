@@ -39,7 +39,7 @@ for j in $need_patch_120hz_fps_pad_list; do
   fi
 done
 # 节律护眼判断
-need_patch_eyecare_mode_pad_list="pipa liuqin yudi zizhan babylon"
+need_patch_eyecare_mode_pad_list="pipa liuqin yudi zizhan babylon dagu"
 is_need_patch_eyecare_mode=0
 for k in $need_patch_eyecare_mode_pad_list; do
   if [[ "$device_code" == "$k" ]]; then
