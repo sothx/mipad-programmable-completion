@@ -1,5 +1,7 @@
 SKIPUNZIP=0
 . "$MODPATH"/util_functions.sh
+magisk_path=/data/adb/modules/
+module_id=$(grep_prop id $MODPATH/module.prop)
 
 if [[ "$KSU" == "true" ]]; then
   ui_print "- KernelSU 用户空间当前的版本号: $KSU_VER_CODE"
@@ -79,6 +81,12 @@ key_check() {
     fi
   done
 }
+
+if [[ -d "$magisk_path$module_id" ]];then
+    ui_print "*********************************************"
+    ui_print "模块已存在，请卸载模块并重启后再尝试安装！"
+    abort "*********************************************"
+fi
 
 # 骁龙8+Gen1机型判断
 if [[ "$device_soc_model" == "SM8475" && "$device_soc_name" == "cape" ]]; then
