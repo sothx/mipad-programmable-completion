@@ -267,6 +267,22 @@ else
   ui_print "- 你选择不开启进游戏三倍速"
 fi
 
+# 解锁游戏音质优化开关
+ui_print "*********************************************"
+ui_print "- 是否解锁\"游戏音质优化\"开关"
+ui_print "  音量+ ：是"
+ui_print "  音量- ：否"
+ui_print "*********************************************"
+key_check
+if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+  ui_print "- 已解锁\"游戏音质优化\"开关"
+  ui_print "- \"游戏音质优化\"开关设置路径位于[游戏工具箱-性能增强]"
+  add_props "# 解锁\"游戏音质优化\"开关"
+  add_props "ro.vendor.audio.game.effect=true"
+else
+  ui_print "- 你选择不解锁\"游戏音质优化\"开关"
+fi
+
 # 开启平滑圆角
 ui_print "*********************************************"
 ui_print "- 是否开启平滑圆角"
