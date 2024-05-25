@@ -1,5 +1,6 @@
 SKIPUNZIP=0
 . "$MODPATH"/util_functions.sh
+api_level_arch_detect
 magisk_path=/data/adb/modules/
 module_id=$(grep_prop id $MODPATH/module.prop)
 
@@ -207,7 +208,7 @@ if [[ "$is_need_patch_120hz_fps" == 1 ]]; then
 fi
 
 # 解锁节律护眼
-if [[ "$is_need_patch_eyecare_mode" == 1 ]]; then
+if [[ "$is_need_patch_eyecare_mode" == 1 && "$API" -ge 34  ]]; then
   ui_print "*********************************************"
   ui_print "- 是否解锁节律护眼(Hyper OS 生效，移植包可能不兼容)"
   ui_print "  音量+ ：是"
@@ -289,6 +290,22 @@ if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
   add_props "ro.vendor.audio.game.effect=true"
 else
   ui_print "- 你选择不解锁\"游戏音质优化\"开关"
+fi
+
+if [[ "$API" -ge 34  ]]; then
+  # 沉浸手势提示线
+  ui_print "*********************************************"
+  ui_print "- 是否沉浸手势提示线(仅在默认主题下生效，Android 14+ 可用)"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 已沉浸手势提示线，仅在默认主题下生效"
+    immerse_gesture_cue_line $MODPATH
+  else
+    ui_print "- 你选择不沉浸手势提示线"
+  fi
 fi
 
 # 开启平滑圆角
