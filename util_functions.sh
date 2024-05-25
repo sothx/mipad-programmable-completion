@@ -64,8 +64,6 @@ patch_eyecare_mode() {
 }
 
 immerse_gesture_cue_line() {
-  # 移除旧版文件
-  rm -rf "$1"/system/product/media/theme/default/*
   # 沉浸手势提示线
-  cp -rf "$1"/common/hide_gesture_cue_line/* "$1"/system/product/media/theme/default/
+  cp -rf "$1"/common/immerse_gesture_cue_line/* "$1"/system/product/media/theme/default/
 }

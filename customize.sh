@@ -292,6 +292,23 @@ else
   ui_print "- 你选择不解锁\"游戏音质优化\"开关"
 fi
 
+if [[ "$API" -le 33  ]]; then
+  # 隐藏手势提示线
+  ui_print "*********************************************"
+  ui_print "- 是否隐藏手势提示线"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 已隐藏手势提示线"
+    settings put global hide_gesture_line 1
+  else
+    ui_print "- 你选择不隐藏手势提示线"
+    settings put global hide_gesture_line 0
+  fi
+fi
+
 if [[ "$API" -ge 34  ]]; then
   # 沉浸手势提示线
   ui_print "*********************************************"
