@@ -85,7 +85,7 @@ key_check() {
 
 if [[ -d "$magisk_path$module_id" ]];then
     ui_print "*********************************************"
-    ui_print "模块已存在，请卸载模块并重启后再尝试安装！"
+    ui_print "模块不支持覆盖更新，请卸载模块并重启平板后再尝试安装！"
     abort "*********************************************"
 fi
 
@@ -205,6 +205,25 @@ if [[ "$is_need_patch_120hz_fps" == 1 ]]; then
   else
     ui_print "- 你选择不解锁120hz高刷"
   fi
+fi
+
+# 静置保持当前应用刷新率上限
+ui_print "*********************************************"
+ui_print "- 静置时是否保持当前应用刷新率上限？"
+ui_print "- [重要提示]此功能会增加系统功耗，耗电量和发热都会比日常系统策略激进要高，请谨慎开启！！！"
+ui_print "  音量+ ：是"
+ui_print "  音量- ：否"
+ui_print "*********************************************"
+key_check
+if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+  ui_print "- 你选择静置时保持当前应用刷新率上限"
+  add_props "# 静置保持当前应用刷新率上限"
+  add_props "ro.surface_flinger.use_content_detection_for_refresh_rate=true"
+  add_props "ro.surface_flinger.set_idle_timer_ms=2147483647"
+  add_props "ro.surface_flinger.set_touch_timer_ms=2147483647"
+  add_props "ro.surface_flinger.set_display_power_timer_ms=2147483647"
+else
+  ui_print "- 你选择静置时使用系统默认配置，不需要保持当前应用刷新率上限"
 fi
 
 # 解锁节律护眼
@@ -388,5 +407,6 @@ if [[ "$API" -eq 34 ]]; then
   fi
 fi
 ui_print "*********************************************"
+ui_print "- 好诶w，模块已经安装完成了，重启平板后生效"
 ui_print "- 功能具体支持情况以系统为准"
 ui_print "*********************************************"
