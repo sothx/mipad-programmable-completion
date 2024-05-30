@@ -67,3 +67,8 @@ immerse_gesture_cue_line() {
   # 沉浸手势提示线
   cp -rf "$1"/common/immerse_gesture_cue_line/* "$1"/system/product/media/theme/default/
 }
+
+hide_gesture_cue_line() {
+  # 隐藏手势提示线
+  cp -rf "$1"/common/hide_gesture_cue_line/* "$1"/system/product/media/theme/default/
+}

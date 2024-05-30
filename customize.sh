@@ -210,7 +210,7 @@ fi
 # 静置保持当前应用刷新率上限
 ui_print "*********************************************"
 ui_print "- 静置时是否保持当前应用刷新率上限？"
-ui_print "- [重要提示]此功能会增加系统功耗，耗电量和发热都会比日常系统策略激进要高，请谨慎开启！！！"
+ui_print "- [重要提示]此功能会增加系统功耗，耗电量和发热都会比日常系统策略激进，请谨慎开启！！！"
 ui_print "  音量+ ：是"
 ui_print "  音量- ：否"
 ui_print "*********************************************"
@@ -321,7 +321,7 @@ is_show_rotation_suggestions="$(settings get secure show_rotation_suggestions)"
 if [[ "$API" -le 33 && "$is_show_rotation_suggestions" == 0  ]]; then
   # 隐藏手势提示线
   ui_print "*********************************************"
-  ui_print "- 是否隐藏手势提示线"
+  ui_print "- 是否隐藏手势提示线？(Android 13 可用)"
   if [[ "$API" -le 33  ]]; then
     ui_print "- 此功能无法与\"旋转建议提示按钮\"共存"
   fi
@@ -342,18 +342,30 @@ if [[ "$API" -le 33 && "$is_show_rotation_suggestions" == 0  ]]; then
 fi
 
 if [[ "$API" -ge 34  ]]; then
-  # 沉浸手势提示线
+  # 优化手势提示线
   ui_print "*********************************************"
-  ui_print "- 是否沉浸手势提示线(仅在默认主题下生效，Android 14+ 可用)"
+  ui_print "- 是否优化手势提示线？(仅在默认主题下生效，Android 14+ 可用)"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "- 已沉浸手势提示线，仅在默认主题下生效"
-    immerse_gesture_cue_line $MODPATH
+    # 沉浸手势提示线
+    ui_print "*********************************************"
+    ui_print "- 需要沉浸还是隐藏优化手势提示线？(仅在默认主题下生效，Android 14+ 可用)"
+    ui_print "  音量+ ：沉浸"
+    ui_print "  音量- ：隐藏"
+    ui_print "*********************************************"
+    key_check
+    if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+      ui_print "- 已沉浸手势提示线，仅在默认主题下生效"
+      immerse_gesture_cue_line $MODPATH
+    else
+      ui_print "- 已隐藏手势提示线，仅在默认主题下生效"
+      hide_gesture_cue_line $MODPATH
+    fi
   else
-    ui_print "- 你选择不沉浸手势提示线"
+    ui_print "- 你选择不优化手势提示线"
   fi
 fi
 
