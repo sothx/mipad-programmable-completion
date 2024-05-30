@@ -22,7 +22,6 @@ rm -rf /data/system/package_cache
 device_code="$(getprop ro.product.device)"
 device_soc_name="$(getprop ro.vendor.qti.soc_name)"
 device_soc_model="$(getprop ro.vendor.qti.soc_model)"
-has_been_patch_device_features=0
 # 红米平板判断
 redmi_pad_list="xun dizi yunluo"
 device_type=$(check_device_type "$redmi_pad_list" "$device_code")
@@ -164,6 +163,7 @@ if [[ "$is_need_patch_desktop_mode" == 1 && "$API" -ge 34  ]]; then
   fi
 fi
 
+has_been_patch_device_features=0
 # 解锁熄屏挂机/熄屏听剧
 ui_print "*********************************************"
 ui_print "- 是否解锁熄屏挂机/熄屏听剧(移植包可能不兼容)"
