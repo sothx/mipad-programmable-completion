@@ -21,6 +21,36 @@ api_level_arch_detect() {
   fi
 }
 
+# 获取设备类型
+check_device_type() {
+    local redmi_pad_list=$1
+    local device_code=$2
+    local result="xiaomi"
+    for i in $redmi_pad_list; do
+        if [[ "$device_code" == "$i" ]]; then
+            result=redmi
+            break
+        fi
+    done
+    echo $result
+}
+
+# 根据机型列表判断是否需要补全对应机型的功能
+check_device_is_need_patch() {
+    local device_code=$1
+    local pad_list=$2
+    local result=0
+
+    for i in $pad_list; do
+        if [[ "$device_code" == "$i" ]]; then
+            result=1
+            break
+        fi
+    done
+
+    echo $result
+}
+
 patch_device_features() {
   DEVICE_CODE="$(getprop ro.product.device)"
   SYSTEM_DEVICE_FEATURES_PATH=/system/product/etc/device_features/${DEVICE_CODE}.xml

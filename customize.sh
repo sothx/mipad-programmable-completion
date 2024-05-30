@@ -25,31 +25,17 @@ device_soc_model="$(getprop ro.vendor.qti.soc_model)"
 has_been_patch_device_features=0
 # 红米平板判断
 redmi_pad_list="xun dizi yunluo"
-device_type=xiaomi
-for i in $redmi_pad_list; do
-  if [[ "$device_code" == "$i" ]]; then
-    device_type=redmi
-    break
-  fi
-done
+device_type=$(check_device_type "$redmi_pad_list" "$device_code")
+
 # 补全120hz判断
 need_patch_120hz_fps_pad_list="pipa liuqin sheng"
-is_need_patch_120hz_fps=0
-for j in $need_patch_120hz_fps_pad_list; do
-  if [[ "$device_code" == "$j" ]]; then
-    is_need_patch_120hz_fps=1
-    break
-  fi
-done
+is_need_patch_120hz_fps=$(check_device_is_need_patch "$device_code" "$need_patch_120hz_fps_pad_list")
 # 节律护眼判断
 need_patch_eyecare_mode_pad_list="pipa liuqin yudi zizhan babylon dagu yunluo xun"
-is_need_patch_eyecare_mode=0
-for k in $need_patch_eyecare_mode_pad_list; do
-  if [[ "$device_code" == "$k" ]]; then
-    is_need_patch_eyecare_mode=1
-    break
-  fi
-done
+is_need_patch_eyecare_mode=$(check_device_is_need_patch "$device_code" "$need_patch_eyecare_mode_pad_list")
+# 工作台模式判断
+need_patch_desktop_mode_pad_list="yunluo xun"
+is_need_patch_desktop_mode=$(check_device_is_need_patch "$device_code" "$need_patch_desktop_mode_pad_list")
 
 
 # 基础函数
@@ -117,24 +103,6 @@ if [[ "$device_type" == "redmi" ]]; then
   ui_print "- 已清空系统桌面的低内存设备检测"
   add_props "# 清空系统桌面的\"低内存\"设备检测"
   add_props "ro.config.low_ram_.threshold_gb="
-  # 恢复工作台默认行为
-  add_props "# 恢复工作台默认行为"
-  add_props "ro.config.miui_desktop_mode_enabled=true"
-  ui_print "*********************************************"
-  ui_print "- 已经恢复工作台默认行为"
-  ui_print "- （如需要使用工作台模式，仍需搭配\"星旅\"添加工作台磁贴，是否需要了解该应用的获取和使用方式?）"
-  ui_print "  音量+ ：是"
-  ui_print "  音量- ：否"
-  ui_print "*********************************************"
-  key_check
-  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "- 星旅网盘下载地址： https://caiyun.139.com/m/i?135CmnIeqzokl (登录后下载不限速)"
-    ui_print "- 红米平板工作台模式磁贴添加指引："
-    ui_print "- 在Magisk授予星旅Root权限(不需要在LSPosed激活模块)-控制中心找到工作台模式-添加磁贴-完成"
-  else
-    ui_print "- 你选择不了解如何添加工作台磁贴"
-    ui_print "- 请注意，如果没有添加工作台磁贴，工作台模式仍然无法正常开启"
-  fi
   # 开启柔和阴影效果
   ui_print "*********************************************"
   ui_print "- 是否开启柔和阴影效果"
@@ -162,6 +130,37 @@ if [[ "$device_type" == "redmi" ]]; then
     add_props "persist.sys.miui_animator_sched.sched_threads=2"
   else
     ui_print "- 你选择不开启双线程动画"
+  fi
+fi
+
+# 解锁工作台模式
+if [[ "$is_need_patch_desktop_mode" == 1 && "$API" -ge 34  ]]; then
+  ui_print "*********************************************"
+  ui_print "- 是否解锁工作台模式?(仅Android 14 下生效)"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    add_props "# 解锁工作台模式"
+    add_props "ro.config.miui_desktop_mode_enabled=true"
+    ui_print "*********************************************"
+    ui_print "- 已经自动为你补齐工作台模式的功能参数"
+    ui_print "- [重要提醒]:由于系统强判断物理运行内存低于8G的设备不显示工作台磁贴，如需要使用工作台模式，还需要需搭配\"星旅\"添加工作台磁贴，是否需要了解该应用的获取和使用方式?"
+    ui_print "  音量+ ：是"
+    ui_print "  音量- ：否"
+    ui_print "*********************************************"
+    key_check
+    if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+      ui_print "- 星旅网盘下载地址： https://caiyun.139.com/m/i?135CmnIeqzokl (登录后下载不限速)"
+      ui_print "- 红米平板工作台模式磁贴添加指引："
+      ui_print "- 在Magisk授予星旅Root权限(不需要在LSPosed激活模块)-控制中心找到工作台模式-添加磁贴-完成"
+    else
+      ui_print "- 你选择不了解如何添加工作台磁贴"
+      ui_print "- 请注意，由于系统强判断物理运行内存低于8G的设备不显示工作台磁贴,如果没有添加工作台磁贴，工作台模式仍然无法正常开启"
+    fi
+  else
+    ui_print "- 你选择不解锁工作台模式"
   fi
 fi
 
