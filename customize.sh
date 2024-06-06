@@ -23,7 +23,7 @@ device_code="$(getprop ro.product.device)"
 device_soc_name="$(getprop ro.vendor.qti.soc_name)"
 device_soc_model="$(getprop ro.vendor.qti.soc_model)"
 # 红米平板判断
-redmi_pad_list="xun dizi yunluo"
+redmi_pad_list="xun dizi yunluo ruan"
 device_type=$(check_device_type "$redmi_pad_list" "$device_code")
 
 # 补全120hz判断
