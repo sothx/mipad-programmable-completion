@@ -210,12 +210,18 @@ fi
 ui_print "*********************************************"
 ui_print "- 静置时是否保持当前应用刷新率上限？"
 ui_print "- [重要提示]此功能会增加系统功耗，耗电量和发热都会比日常系统策略激进，请谨慎开启！！！"
+if [[ "$is_need_patch_120hz_fps" == 1 ]]; then
+  ui_print "- [重要提示]静置保持144hz刷新率会导致小米触控笔无法正常工作，使用触控笔请务必调整到120hz及以下！！！"
+fi
 ui_print "  音量+ ：是"
 ui_print "  音量- ：否"
 ui_print "*********************************************"
 key_check
 if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
   ui_print "- 你选择静置时保持当前应用刷新率上限"
+  if [[ "$is_need_patch_120hz_fps" == 1 ]]; then
+    ui_print "- [你已知晓]静置保持144hz刷新率会导致小米触控笔无法正常工作，使用触控笔请务必调整到120hz及以下！！！"
+  fi
   add_props "# 静置保持当前应用刷新率上限"
   add_props "ro.surface_flinger.use_content_detection_for_refresh_rate=true"
   add_props "ro.surface_flinger.set_idle_timer_ms=2147483647"
@@ -285,19 +291,21 @@ else
 fi
 
 # 开启进游戏三倍速
-ui_print "*********************************************"
-ui_print "- 是否开启进游戏三倍速"
-ui_print "  音量+ ：是"
-ui_print "  音量- ：否"
-ui_print "*********************************************"
-key_check
-if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-  ui_print "- 已开启进游戏三倍速"
-  add_props "# 开启进游戏三倍速"
-  add_props "debug.game.video.support=true"
-  add_props "debug.game.video.speed=true"
-else
-  ui_print "- 你选择不开启进游戏三倍速"
+if [[ "$API" -ge 33  ]]; then
+  ui_print "*********************************************"
+  ui_print "- 是否开启进游戏三倍速"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 已开启进游戏三倍速"
+    add_props "# 开启进游戏三倍速"
+    add_props "debug.game.video.support=true"
+    add_props "debug.game.video.speed=true"
+  else
+    ui_print "- 你选择不开启进游戏三倍速"
+  fi
 fi
 
 # 解锁游戏音质优化开关
