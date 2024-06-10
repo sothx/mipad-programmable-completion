@@ -75,7 +75,11 @@ if [[ -d "$magisk_path$module_id" ]];then
 fi
 
 # 骁龙8+Gen1机型判断
-if [[ "$device_soc_model" == "SM8475" && "$device_soc_name" == "cape" ]]; then
+has_been_enabled_smartfocusio=0
+if [[ $(grep_prop persist.sys.stability.smartfocusio $magisk_path"MIUI_MagicWindow+/system.prop") ]]; then
+  has_been_enabled_smartfocusio=1
+fi
+if [[ "$device_soc_model" == "SM8475" && "$device_soc_name" == "cape" && "$API" -ge 33 && $has_been_enabled_smartfocusio == 0 ]]; then
   # 调整I/O调度
   ui_print "*********************************************"
   ui_print "- 检测到你的设备处理器属于骁龙8+Gen1"
