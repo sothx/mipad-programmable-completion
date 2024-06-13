@@ -16,9 +16,11 @@ else
   fi
 fi
 
+# 重置缓存
+rm -rf /data/system/package_cache
+rm -rf /data/resource-cache
 # 环境配置
 touch "$MODPATH"/system.prop
-rm -rf /data/system/package_cache
 device_code="$(getprop ro.product.device)"
 device_soc_name="$(getprop ro.vendor.qti.soc_name)"
 device_soc_model="$(getprop ro.vendor.qti.soc_model)"
