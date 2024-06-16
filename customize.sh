@@ -27,7 +27,7 @@ device_soc_model="$(getprop ro.vendor.qti.soc_model)"
 # 红米平板判断
 redmi_pad_list="xun dizi yunluo ruan"
 device_type=$(check_device_type "$redmi_pad_list" "$device_code")
-
+ 
 # 补全120hz判断
 need_patch_120hz_fps_pad_list="pipa liuqin sheng"
 is_need_patch_120hz_fps=$(check_device_is_need_patch "$device_code" "$need_patch_120hz_fps_pad_list")
@@ -277,18 +277,12 @@ fi
 # 开启屏幕旋转建议提示按钮
 ui_print "*********************************************"
 ui_print "- 是否开启屏幕旋转建议提示按钮"
-if [[ "$API" -le 33  ]]; then
-  ui_print "- [重要提醒]此功能无法与\"隐藏手势提示线\"共存"
-fi
 ui_print "  音量+ ：是"
 ui_print "  音量- ：否"
 ui_print "*********************************************"
 key_check
 if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
   ui_print "- 已开启屏幕旋转建议提示按钮"
-  if [[ "$API" -le 33  ]]; then
-    ui_print "- 你已选择知晓此功能无法与\"隐藏手势提示线\"共存"
-  fi
   settings put secure show_rotation_suggestions 1
 else
   ui_print "- 你选择不开启屏幕旋转建议提示按钮"
@@ -345,25 +339,20 @@ else
   ui_print "- 你选择不解锁\"游戏音质优化\"开关"
 fi
 
-is_show_rotation_suggestions="$(settings get secure show_rotation_suggestions)"
-if [[ "$API" -le 33 && "$is_show_rotation_suggestions" == 0  ]]; then
+if [[ "$API" -le 33  ]]; then
   # 隐藏手势提示线
   ui_print "*********************************************"
-  ui_print "- 是否隐藏手势提示线？(Android 13 可用)"
-  ui_print "- [重要提醒]此功能无法与\"旋转建议提示按钮\"共存"
+  ui_print "- 是否隐藏手势提示线？(仅在默认主题下生效，Android 13 可用)"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "- 已隐藏手势提示线"
-    if [[ "$API" -le 33  ]]; then
-      ui_print "- 您已选择知晓此功能无法与\"旋转建议提示按钮\"共存"
-    fi
-    settings put global hide_gesture_line 1
+    ui_print "- 已隐藏手势提示线，仅在默认主题下生效"
+    settings put global hide_gesture_line 0
+    hide_gesture_cue_line $MODPATH
   else
     ui_print "- 你选择不隐藏手势提示线"
-    settings put global hide_gesture_line 0
   fi
 fi
 
