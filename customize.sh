@@ -122,7 +122,7 @@ if [[ "$device_type" == "redmi" ]]; then
   # 清空系统桌面低内存设备检测
   ui_print "- 已清空系统桌面的低内存设备检测"
   add_props "# 清空系统桌面的\"低内存\"设备检测"
-  add_props "ro.config.low_ram_.threshold_gb="
+  add_props "ro.config.low_ram.threshold_gb="
   # 开启柔和阴影效果
   ui_print "*********************************************"
   ui_print "- 是否开启柔和阴影效果"
