@@ -32,7 +32,7 @@ debug.game.video.speed=true
 
 - 禁用系统针对低内存设备的判断(仅红米平板)
 ```bash
-ro.config.low_ram_.threshold_gb=
+ro.config.low_ram.threshold_gb=
 ```
 
 - 恢复工作台默认行为(仅红米平板，需额外搭配"星旅"添加工作台磁贴)
