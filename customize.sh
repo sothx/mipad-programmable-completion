@@ -37,6 +37,9 @@ is_need_patch_eyecare_mode=$(check_device_is_need_patch "$device_code" "$need_pa
 # 工作台模式判断
 need_patch_desktop_mode_pad_list="yunluo xun"
 is_need_patch_desktop_mode=$(check_device_is_need_patch "$device_code" "$need_patch_desktop_mode_pad_list")
+# 不支持高级材质机型判断
+un_need_patch_background_blur_pad_list="dizi ruan"
+is_un_need_patch_background_blur=$(check_device_is_need_patch "$device_code" "$un_need_patch_background_blur_pad_list")
 
 
 # 基础函数
@@ -400,7 +403,7 @@ else
 fi
 
 # 支持高级材质
-if [[ "$API" -eq 34 ]]; then
+if [[ "$API" -ge 34 && "$is_un_need_patch_background_blur" == '0' ]]; then
   ui_print "*********************************************"
   ui_print "- 是否开启高级材质1.0"
   ui_print "  音量+ ：是"
