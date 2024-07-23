@@ -17,8 +17,8 @@ else
 fi
 
 # 重置缓存
-rm -rf /data/system/package_cache
-rm -rf /data/resource-cache
+# rm -rf /data/system/package_cache
+# rm -rf /data/resource-cache
 # 环境配置
 touch "$MODPATH"/system.prop
 device_code="$(getprop ro.product.device)"
@@ -206,6 +206,26 @@ if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
   add_post_fs_data 'patch_remove_screen_off_hold_on $MODDIR'
 else
   ui_print "- 你选择不解锁熄屏挂机/熄屏听剧"
+fi
+
+# 解锁视频工具箱智能刷新率
+ui_print "*********************************************"
+ui_print "- 是否解锁视频工具箱智能刷新率(移植包可能不兼容)"
+ui_print "  音量+ ：是"
+ui_print "  音量- ：否"
+ui_print "*********************************************"
+key_check
+if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+  ui_print "- 已解锁视频工具箱智能刷新率"
+  if [[ "$has_been_patch_device_features" == 0 ]]; then
+    has_been_patch_device_features=1
+    patch_device_features $MODPATH
+    add_post_fs_data 'patch_device_features $MODDIR'
+  fi
+  patch_support_video_dfps  $MODPATH
+  add_post_fs_data 'patch_support_video_dfps $MODDIR'
+else
+  ui_print "- 你选择不解锁视频工具箱智能刷新率"
 fi
 
 # 解锁120hz

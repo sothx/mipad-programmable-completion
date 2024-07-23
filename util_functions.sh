@@ -83,6 +83,16 @@ patch_remove_screen_off_hold_on() {
   fi
 }
 
+patch_support_video_dfps() {
+  DEVICE_CODE="$(getprop ro.product.device)"
+  SYSTEM_DEVICE_FEATURES_PATH=/system/product/etc/device_features/${DEVICE_CODE}.xml
+  MODULE_DEVICE_FEATURES_PATH="$1"/system/product/etc/device_features/${DEVICE_CODE}.xml
+  if [[ -f "$MODULE_DEVICE_FEATURES_PATH" ]]; then
+    # 解锁视频工具箱智能刷新率
+    sed -i "$(awk '/<\/features>/{print NR-0; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    <bool name=\"support_video_dfps\">true</bool>" $MODULE_DEVICE_FEATURES_PATH
+  fi
+}
+
 patch_eyecare_mode() {
   DEVICE_CODE="$(getprop ro.product.device)"
   SYSTEM_DEVICE_FEATURES_PATH=/system/product/etc/device_features/${DEVICE_CODE}.xml
