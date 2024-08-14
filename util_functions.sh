@@ -120,3 +120,8 @@ grep_prop() {
   [ -z "$FILES" ] && FILES='/system/build.prop'
   cat $FILES 2>/dev/null | dos2unix | sed -n "$REGEX" | head -n 1
 }
+
+show_rotation_suggestions() {
+  # 开启旋转建议提示按钮
+  settings put secure show_rotation_suggestions 1
+}

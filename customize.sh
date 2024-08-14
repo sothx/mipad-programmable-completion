@@ -306,7 +306,8 @@ ui_print "*********************************************"
 key_check
 if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
   ui_print "- 已开启屏幕旋转建议提示按钮"
-  settings put secure show_rotation_suggestions 1
+  show_rotation_suggestions $MODPATH
+  add_post_fs_data 'show_rotation_suggestions $MODDIR'
 else
   ui_print "- 你选择不开启屏幕旋转建议提示按钮"
   settings put secure show_rotation_suggestions 0
