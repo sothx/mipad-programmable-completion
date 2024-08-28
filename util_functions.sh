@@ -23,32 +23,32 @@ api_level_arch_detect() {
 
 # 获取设备类型
 check_device_type() {
-    local redmi_pad_list=$1
-    local device_code=$2
-    local result="xiaomi"
-    for i in $redmi_pad_list; do
-        if [[ "$device_code" == "$i" ]]; then
-            result=redmi
-            break
-        fi
-    done
-    echo $result
+  local redmi_pad_list=$1
+  local device_code=$2
+  local result="xiaomi"
+  for i in $redmi_pad_list; do
+    if [[ "$device_code" == "$i" ]]; then
+      result=redmi
+      break
+    fi
+  done
+  echo $result
 }
 
 # 根据机型列表判断是否需要补全对应机型的功能
 check_device_is_need_patch() {
-    local device_code=$1
-    local pad_list=$2
-    local result=0
+  local device_code=$1
+  local pad_list=$2
+  local result=0
 
-    for i in $pad_list; do
-        if [[ "$device_code" == "$i" ]]; then
-            result=1
-            break
-        fi
-    done
+  for i in $pad_list; do
+    if [[ "$device_code" == "$i" ]]; then
+      result=1
+      break
+    fi
+  done
 
-    echo $result
+  echo $result
 }
 
 patch_device_features() {
@@ -124,4 +124,15 @@ grep_prop() {
 show_rotation_suggestions() {
   # 开启旋转建议提示按钮
   settings put secure show_rotation_suggestions 1
+}
+
+create_fonts_dir() {
+  XIAOMI_MSLGRDP_PATH=/data/rootfs/home/xiaomi
+  WPS_OFFICE_PC_FONTS_DIR="$XIAOMI_MSLGRDP_PATH/.fonts"
+  if [[ -d "$XIAOMI_MSLGRDP_PATH" && ! -d "$WPS_OFFICE_PC_FONTS_DIR" ]]; then
+    /bin/mkdir -p "$WPS_OFFICE_PC_FONTS_DIR"
+  fi
+  if [[ -d "$WPS_OFFICE_PC_FONTS_DIR" ]]; then
+    /bin/chmod -R 777 "$FONTS_DIR"
+  fi
 }

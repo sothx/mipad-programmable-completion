@@ -187,6 +187,34 @@ if [[ "$is_need_patch_desktop_mode" == 1 && "$API" -ge 34  ]]; then
   fi
 fi
 
+# PC级WPS字体目录自动创建
+is_need_create_fonts_dir=0
+XIAOMI_MSLGRDP_PATH=/data/rootfs/home/xiaomi
+WPS_OFFICE_PC_FONTS_DIR="$XIAOMI_MSLGRDP_PATH/.fonts"
+if [[ -d "$XIAOMI_MSLGRDP_PATH" && ! -d "$WPS_OFFICE_PC_FONTS_DIR" ]]; then
+  is_need_create_fonts_dir=1
+fi
+if [[ "$API" -ge 34 && "$is_need_create_fonts_dir" -eq 1 ]]; then
+  ui_print "*********************************************"
+  ui_print "- 检测到您的系统已存在PC框架的运行环境"
+  ui_print "- 是否需要为WPS Office PC 创建字体扩展目录？"
+  ui_print "- [重要提醒]需要将字体文件放入$WPS_OFFICE_PC_FONTS_DIR文件夹内"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+  ui_print "- 已生成WPS Office PC字体扩展目录"
+  ui_print "- [重要提醒]需要将字体文件放入$WPS_OFFICE_PC_FONTS_DIR文件夹内"
+  create_fonts_dir $MODPATH
+  add_post_fs_data 'create_fonts_dir $MODDIR'
+  else
+    ui_print "*********************************************"
+    ui_print "- 你选择不创建WPS Office PC字体扩展目录"
+    ui_print "*********************************************"
+  fi
+fi
+
 has_been_patch_device_features=0
 # 解锁熄屏挂机/熄屏听剧
 ui_print "*********************************************"
