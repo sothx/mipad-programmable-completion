@@ -56,11 +56,28 @@ patch_device_features() {
   SYSTEM_DEVICE_FEATURES_PATH=/system/product/etc/device_features/${DEVICE_CODE}.xml
   MODULE_DEVICE_FEATURES_PATH="$1"/system/product/etc/device_features/${DEVICE_CODE}.xml
 
+  if [[ ! -d "$1"/system/product/etc/device_features/ ]]; then
+    mkdir -p "$1"/system/product/etc/device_features/
+  fi
+
   # 移除旧版补丁文件
   rm -rf "$MODULE_DEVICE_FEATURES_PATH"
 
   # 复制系统内配置到模块内
   cp -f "$SYSTEM_DEVICE_FEATURES_PATH" "$MODULE_DEVICE_FEATURES_PATH"
+}
+
+patch_cn_google_services() {
+  MODULE_CN_GOOGLE_SERVICES_PATH="$1"/system/product/etc/permissions/
+
+  if [[ ! -d $MODULE_CN_GOOGLE_SERVICES_PATH ]]; then
+    mkdir -p $MODULE_CN_GOOGLE_SERVICES_PATH
+  fi
+
+  # 移除旧版补丁文件
+  rm -rf "$MODULE_DEVICE_FEATURES_PATH"cn.google.services.xml
+
+  cp -rf "$1"/common/cn_google_services/* "$MODULE_CN_GOOGLE_SERVICES_PATH"
 }
 
 patch_120hz_fps() {
@@ -116,11 +133,21 @@ patch_wild_boost() {
 }
 
 immerse_gesture_cue_line() {
+  
+  if [[ ! -d "$1"/system/product/media/theme/default/ ]]; then
+    mkdir -p "$1"/system/product/media/theme/default/
+  fi
+  
   # 沉浸手势提示线
   cp -rf "$1"/common/immerse_gesture_cue_line/* "$1"/system/product/media/theme/default/
 }
 
 hide_gesture_cue_line() {
+
+  if [[ ! -d "$1"/system/product/media/theme/default/ ]]; then
+    mkdir -p "$1"/system/product/media/theme/default/
+  fi
+  
   # 隐藏手势提示线
   cp -rf "$1"/common/hide_gesture_cue_line/* "$1"/system/product/media/theme/default/
 }

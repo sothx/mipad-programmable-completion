@@ -217,6 +217,24 @@ if [[ "$API" -ge 34 && "$is_need_create_fonts_dir" -eq 1 ]]; then
   fi
 fi
 
+if [[ "$API" -ge 33 &&  -f "/system/product/etc/permissions/cn.google.services.xml" ]]; then
+  # 解除GMS区域限制
+  ui_print "*********************************************"
+  ui_print "- 是否解除谷歌服务框架的区域限制？"
+  ui_print "- [重要提醒]解除谷歌服务框架区域限制后可以使用 Google Play 附近分享等功能~"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 已解除谷歌服务框架的区域限制"
+    patch_cn_google_services $MODPATH
+    add_post_fs_data 'patch_cn_google_services $MODDIR'
+  else
+    ui_print "- 你选择不解除谷歌服务框架的区域限制"
+  fi
+fi
+
 has_been_patch_device_features=0
 # 解锁熄屏挂机/熄屏听剧
 ui_print "*********************************************"
@@ -397,7 +415,7 @@ if [[ "$API" -ge 33 ]]; then
     patch_wild_boost $MODPATH
     add_post_fs_data 'patch_wild_boost $MODDIR'
   else
-  ui_print "- 你选择不解锁游戏工具箱\"狂暴引擎\"UI界面"
+    ui_print "- 你选择不解锁游戏工具箱\"狂暴引擎\"UI界面"
   fi
 fi
 
