@@ -27,7 +27,7 @@ device_soc_model="$(getprop ro.vendor.qti.soc_model)"
 # 红米平板判断
 redmi_pad_list="xun dizi yunluo ruan"
 device_type=$(check_device_type "$redmi_pad_list" "$device_code")
- 
+
 # 补全120hz判断
 need_patch_120hz_fps_pad_list="pipa liuqin sheng"
 is_need_patch_120hz_fps=$(check_device_is_need_patch "$device_code" "$need_patch_120hz_fps_pad_list")
@@ -40,7 +40,6 @@ is_need_patch_desktop_mode=$(check_device_is_need_patch "$device_code" "$need_pa
 # 不支持高级材质机型判断
 un_need_patch_background_blur_pad_list="dizi ruan"
 is_un_need_patch_background_blur=$(check_device_is_need_patch "$device_code" "$un_need_patch_background_blur_pad_list")
-
 
 # 基础函数
 add_props() {
@@ -73,10 +72,10 @@ key_check() {
   done
 }
 
-if [[ -d "$magisk_path$module_id" ]];then
-    ui_print "*********************************************"
-    ui_print "模块不支持覆盖更新，请卸载模块并重启平板后再尝试安装！"
-    abort "*********************************************"
+if [[ -d "$magisk_path$module_id" ]]; then
+  ui_print "*********************************************"
+  ui_print "模块不支持覆盖更新，请卸载模块并重启平板后再尝试安装！"
+  abort "*********************************************"
 fi
 
 # 骁龙8+Gen1机型判断
@@ -157,7 +156,7 @@ if [[ "$device_type" == "redmi" ]]; then
 fi
 
 # 解锁工作台模式
-if [[ "$is_need_patch_desktop_mode" == 1 && "$API" -ge 34  ]]; then
+if [[ "$is_need_patch_desktop_mode" == 1 && "$API" -ge 34 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否解锁工作台模式?(仅Android 14 下生效)"
   ui_print "  音量+ ：是"
@@ -194,6 +193,9 @@ WPS_OFFICE_PC_FONTS_DIR="$XIAOMI_MSLGRDP_PATH/.fonts"
 if [[ -d "$XIAOMI_MSLGRDP_PATH" && ! -d "$WPS_OFFICE_PC_FONTS_DIR" ]]; then
   is_need_create_fonts_dir=1
 fi
+if [[ -d "$WPS_OFFICE_PC_FONTS_DIR" ]]; then
+  is_need_create_fonts_dir=1
+fi
 if [[ "$API" -ge 34 && "$is_need_create_fonts_dir" -eq 1 ]]; then
   ui_print "*********************************************"
   ui_print "- 检测到您的系统已存在PC框架的运行环境"
@@ -204,10 +206,10 @@ if [[ "$API" -ge 34 && "$is_need_create_fonts_dir" -eq 1 ]]; then
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-  ui_print "- 已生成WPS Office PC字体扩展目录"
-  ui_print "- [重要提醒]需要将字体文件放入$WPS_OFFICE_PC_FONTS_DIR文件夹内"
-  create_fonts_dir $MODPATH
-  add_post_fs_data 'create_fonts_dir $MODDIR'
+    ui_print "- 已生成WPS Office PC字体扩展目录"
+    ui_print "- [重要提醒]需要将字体文件放入$WPS_OFFICE_PC_FONTS_DIR文件夹内"
+    create_fonts_dir $MODPATH
+    add_post_fs_data 'create_fonts_dir $MODDIR'
   else
     ui_print "*********************************************"
     ui_print "- 你选择不创建WPS Office PC字体扩展目录"
@@ -230,7 +232,7 @@ if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
     patch_device_features $MODPATH
     add_post_fs_data 'patch_device_features $MODDIR'
   fi
-  patch_remove_screen_off_hold_on  $MODPATH
+  patch_remove_screen_off_hold_on $MODPATH
   add_post_fs_data 'patch_remove_screen_off_hold_on $MODDIR'
 else
   ui_print "- 你选择不解锁熄屏挂机/熄屏听剧"
@@ -250,7 +252,7 @@ if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
     patch_device_features $MODPATH
     add_post_fs_data 'patch_device_features $MODDIR'
   fi
-  patch_support_video_dfps  $MODPATH
+  patch_support_video_dfps $MODPATH
   add_post_fs_data 'patch_support_video_dfps $MODDIR'
 else
   ui_print "- 你选择不解锁视频工具箱智能刷新率"
@@ -304,7 +306,7 @@ else
 fi
 
 # 解锁节律护眼
-if [[ "$is_need_patch_eyecare_mode" == 1 && "$API" -ge 34  ]]; then
+if [[ "$is_need_patch_eyecare_mode" == 1 && "$API" -ge 34 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否解锁节律护眼(Hyper OS 生效，移植包可能不兼容)"
   ui_print "  音量+ ：是"
@@ -358,7 +360,7 @@ else
 fi
 
 # 开启进游戏三倍速
-if [[ "$API" -ge 33  ]]; then
+if [[ "$API" -ge 33 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否开启进游戏三倍速"
   ui_print "  音量+ ：是"
@@ -372,6 +374,30 @@ if [[ "$API" -ge 33  ]]; then
     add_props "debug.game.video.speed=true"
   else
     ui_print "- 你选择不开启进游戏三倍速"
+  fi
+fi
+
+# 解锁游戏工具箱狂暴引擎UI界面
+if [[ "$API" -ge 33 ]]; then
+  ui_print "*********************************************"
+  ui_print "- 是否解锁游戏工具箱\"狂暴引擎\"UI界面？(移植包可能不兼容)"
+  ui_print "- [重要提示]该功能仅为开启\"狂暴引擎\"的UI界面，并非真的添加\"狂暴引擎\"功能，也无法开启feas！！！"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 已解锁游戏工具箱\"狂暴引擎\"UI界面"
+    ui_print "- [你已知晓]该功能仅为开启\"狂暴引擎\"的UI界面，并非真的添加\"狂暴引擎\"功能，也无法开启feas！！！"
+    if [[ "$has_been_patch_device_features" == 0 ]]; then
+      has_been_patch_device_features=1
+      patch_device_features $MODPATH
+      add_post_fs_data 'patch_device_features $MODDIR'
+    fi
+    patch_wild_boost $MODPATH
+    add_post_fs_data 'patch_wild_boost $MODDIR'
+  else
+  ui_print "- 你选择不解锁游戏工具箱\"狂暴引擎\"UI界面"
   fi
 fi
 
@@ -391,7 +417,7 @@ else
   ui_print "- 你选择不解锁\"游戏音质优化\"开关"
 fi
 
-if [[ "$API" -le 33  ]]; then
+if [[ "$API" -le 33 ]]; then
   # 隐藏手势提示线
   ui_print "*********************************************"
   ui_print "- 是否隐藏手势提示线？(仅在默认主题下生效，Android 13 可用)"
@@ -408,7 +434,7 @@ if [[ "$API" -le 33  ]]; then
   fi
 fi
 
-if [[ "$API" -ge 34  ]]; then
+if [[ "$API" -ge 34 ]]; then
   # 优化手势提示线
   ui_print "*********************************************"
   ui_print "- 是否优化手势提示线？(仅在默认主题下生效，Android 14+ 可用)"

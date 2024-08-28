@@ -103,6 +103,18 @@ patch_eyecare_mode() {
   fi
 }
 
+patch_wild_boost() {
+  DEVICE_CODE="$(getprop ro.product.device)"
+  SYSTEM_DEVICE_FEATURES_PATH=/system/product/etc/device_features/${DEVICE_CODE}.xml
+  MODULE_DEVICE_FEATURES_PATH="$1"/system/product/etc/device_features/${DEVICE_CODE}.xml
+  if [[ -f "$MODULE_DEVICE_FEATURES_PATH" ]]; then
+    # 游戏工具箱狂暴引擎UI
+    sed -i "$(awk '/<\/features>/{print NR-0; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    <bool name=\"support_wild_boost\">true</bool>" $MODULE_DEVICE_FEATURES_PATH
+    # 设置、控制中心狂暴引擎UI(安全管家 9.0+)
+    sed -i "$(awk '/<\/features>/{print NR-0; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    <bool name=\"support_wild_boost_bat_perf\">true</bool>" $MODULE_DEVICE_FEATURES_PATH
+  fi
+}
+
 immerse_gesture_cue_line() {
   # 沉浸手势提示线
   cp -rf "$1"/common/immerse_gesture_cue_line/* "$1"/system/product/media/theme/default/
