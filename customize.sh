@@ -221,7 +221,7 @@ if [[ "$API" -ge 33 &&  -f "/system/product/etc/permissions/cn.google.services.x
   # 解除GMS区域限制
   ui_print "*********************************************"
   ui_print "- 是否解除谷歌服务框架的区域限制？"
-  ui_print "- [重要提醒]解除谷歌服务框架区域限制后可以使用 Google Play 附近分享等功能~"
+  ui_print "- [重要提醒]解除谷歌服务框架区域限制后可以使用 Google Play 快速分享等功能~"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
