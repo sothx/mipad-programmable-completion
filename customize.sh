@@ -438,14 +438,15 @@ fi
 # 解锁宽高比（实验）功能
 if [[ "$API" -ge 34 ]]; then
   ui_print "*********************************************"
-  ui_print "- 是否解锁\"宽高比（实验）\"功能？"
-  ui_print "- 需要Hyper OS 2.0才支持该项新功能"
+  ui_print "- 是否解锁\"实验室\"-\"宽高比（实验）\"功能？"
+  ui_print "- [你已知晓]需要Hyper OS 2.0才支持该项功能"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "- 已解锁\"宽高比（实验）\"功能"
+    ui_print "- 已解锁\"实验室\"-\"宽高比（实验）\"功能"
+    ui_print "- [你已知晓]需要Hyper OS 2.0才支持该项功能"
     if [[ "$has_been_patch_device_features" == 0 ]]; then
       has_been_patch_device_features=1
       patch_device_features $MODPATH
@@ -454,7 +455,7 @@ if [[ "$API" -ge 34 ]]; then
     patch_app_compat_aspect_ratio_user_settings $MODPATH
     add_post_fs_data 'patch_app_compat_aspect_ratio_user_settings $MODDIR'
   else
-    ui_print "- 你选择不解锁\"宽高比（实验）\"功能"
+    ui_print "- 你选择不解锁\"实验室\"-\"宽高比（实验）\"功能"
   fi
 fi
 
@@ -486,12 +487,14 @@ if [[ "$API" -ge 34 ]]; then
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
     ui_print "*********************************************"
     ui_print "- 需要沉浸还是隐藏优化手势提示线？(仅在默认主题下生效，Android 14+ 可用)"
+    ui_print "- [重要提醒]沉浸手势提示线可能会导致部分应用底部有细小白边"
     ui_print "  音量+ ：沉浸"
     ui_print "  音量- ：隐藏"
     ui_print "*********************************************"
     key_check
     if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
       ui_print "- 已沉浸手势提示线，仅在默认主题下生效"
+      ui_print "- [重要提醒]沉浸手势提示线可能会导致部分应用底部有细小白边"
       immerse_gesture_cue_line $MODPATH
     else
       ui_print "- 已隐藏手势提示线，仅在默认主题下生效"
