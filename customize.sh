@@ -217,7 +217,7 @@ if [[ "$API" -ge 34 && "$is_need_create_fonts_dir" -eq 1 ]]; then
   fi
 fi
 
-if [[ "$API" -ge 33 &&  -f "/system/product/etc/permissions/cn.google.services.xml" ]]; then
+if [[ "$API" -ge 33 && -f "/system/product/etc/permissions/cn.google.services.xml" ]]; then
   # 解除GMS区域限制
   ui_print "*********************************************"
   ui_print "- 是否解除谷歌服务框架的区域限制？"
@@ -435,6 +435,29 @@ else
   ui_print "- 你选择不解锁\"游戏音质优化\"开关"
 fi
 
+# 解锁宽高比（实验）功能
+if [[ "$API" -ge 34 ]]; then
+  ui_print "*********************************************"
+  ui_print "- 是否解锁\"宽高比（实验）\"功能？"
+  ui_print "- 需要Hyper OS 2.0才支持该项新功能"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 已解锁\"宽高比（实验）\"功能"
+    if [[ "$has_been_patch_device_features" == 0 ]]; then
+      has_been_patch_device_features=1
+      patch_device_features $MODPATH
+      add_post_fs_data 'patch_app_compat_aspect_ratio_user_settings $MODDIR'
+    fi
+    patch_app_compat_aspect_ratio_user_settings $MODPATH
+    add_post_fs_data 'patch_app_compat_aspect_ratio_user_settings $MODDIR'
+  else
+    ui_print "- 你选择不解锁\"宽高比（实验）\"功能"
+  fi
+fi
+
 if [[ "$API" -le 33 ]]; then
   # 隐藏手势提示线
   ui_print "*********************************************"
@@ -528,6 +551,7 @@ if [[ "$API" -ge 34 && "$is_un_need_patch_background_blur" == '0' ]]; then
     ui_print "*********************************************"
   fi
 fi
+
 ui_print "*********************************************"
 ui_print "- 好诶w，模块已经安装完成了，重启平板后生效"
 ui_print "- 功能具体支持情况以系统为准"

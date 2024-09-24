@@ -175,3 +175,13 @@ create_fonts_dir() {
     /bin/chmod -R 777 "$FONTS_DIR"
   fi
 }
+
+patch_app_compat_aspect_ratio_user_settings() {
+  DEVICE_CODE="$(getprop ro.product.device)"
+  SYSTEM_DEVICE_FEATURES_PATH=/system/product/etc/device_features/${DEVICE_CODE}.xml
+  MODULE_DEVICE_FEATURES_PATH="$1"/system/product/etc/device_features/${DEVICE_CODE}.xml
+  if [[ -f "$MODULE_DEVICE_FEATURES_PATH" ]]; then
+    # 宽高比实验
+    sed -i "$(awk '/<\/features>/{print NR-0; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    <bool name=\"enable_app_compat_aspect_ratio_user_settings\">true</bool>" $MODULE_DEVICE_FEATURES_PATH
+  fi
+}
