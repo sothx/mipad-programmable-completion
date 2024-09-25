@@ -277,7 +277,7 @@ else
 fi
 
 # 解锁120hz
-if [[ "$is_need_patch_120hz_fps" == 1 ]]; then
+if [[ "$is_need_patch_120hz_fps" == 1 "$API" -le 34 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否解锁120hz高刷(移植包可能不兼容)"
   ui_print "  音量+ ：是"
