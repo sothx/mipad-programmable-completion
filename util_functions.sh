@@ -89,6 +89,7 @@ patch_120hz_fps() {
     # 补全120hz
     sed -i "$(awk '/<integer name="smart_fps_value">144<\/integer>/{print NR+3; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>120</item>" $MODULE_DEVICE_FEATURES_PATH
     else
+    has_been_patch_120hz_fps=1
     sed -i "$(awk '/<integer name="smart_fps_value">120<\/integer>/{print NR+2; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>144</item>" $MODULE_DEVICE_FEATURES_PATH
     sed -i 's/<integer name="smart_fps_value">120<\/integer>/<integer name="smart_fps_value">144<\/integer>/g' $MODULE_DEVICE_FEATURES_PATH
     sed -i '/<integer name="support_max_fps">144<\/integer>/d' $MODULE_DEVICE_FEATURES_PATH
