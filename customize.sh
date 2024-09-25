@@ -277,9 +277,11 @@ else
 fi
 
 # 解锁120hz
-if [[ "$is_need_patch_120hz_fps" == 1 "$API" -le 34 ]]; then
+if [[ "$is_need_patch_120hz_fps" == 1 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否解锁120hz高刷(移植包可能不兼容)"
+  ui_print "- [重要提示]在Android 15+会将高刷选项的默认行为还原为Android14时的显示效果"
+  ui_print "- [重要提示]解锁后不会出现\"最高到144hz\"的高刷选项，是正常的模块行为"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"

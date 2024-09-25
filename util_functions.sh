@@ -85,8 +85,14 @@ patch_120hz_fps() {
   SYSTEM_DEVICE_FEATURES_PATH=/system/product/etc/device_features/${DEVICE_CODE}.xml
   MODULE_DEVICE_FEATURES_PATH="$1"/system/product/etc/device_features/${DEVICE_CODE}.xml
   if [[ -f "$MODULE_DEVICE_FEATURES_PATH" ]]; then
+    if [[ "$API" -le 34 ]]; then
     # 补全120hz
     sed -i "$(awk '/<integer name="smart_fps_value">144<\/integer>/{print NR+3; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>120</item>" $MODULE_DEVICE_FEATURES_PATH
+    else
+    sed -i "$(awk '/<integer name="smart_fps_value">120<\/integer>/{print NR+2; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>144</item>" $MODULE_DEVICE_FEATURES_PATH
+    sed -i 's/<integer name="smart_fps_value">120<\/integer>/<integer name="smart_fps_value">144<\/integer>/g' $MODULE_DEVICE_FEATURES_PATH
+    sed -i '/<integer name="support_max_fps">144<\/integer>/d' $MODULE_DEVICE_FEATURES_PATH
+    fi
   fi
 }
 
