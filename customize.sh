@@ -550,6 +550,7 @@ if [[ "$API" -ge 34 && "$is_un_need_patch_background_blur" == '0' ]]; then
       ui_print "- 已开启高级材质2.0"
       add_props "# 开启高级材质2.0"
       add_props "persist.sys.background_blur_version=2"
+      add_props "persist.sys.advanced_visual_release=3"
     else
       ui_print "- 你选择不开启高级材质2.0"
     fi
