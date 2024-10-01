@@ -29,7 +29,7 @@ redmi_pad_list="xun dizi yunluo ruan"
 device_type=$(check_device_type "$redmi_pad_list" "$device_code")
 
 # 补全120hz判断
-need_patch_120hz_fps_pad_list="pipa liuqin sheng"
+need_patch_120hz_fps_pad_list="pipa liuqin sheng uke muyu"
 is_need_patch_120hz_fps=$(check_device_is_need_patch "$device_code" "$need_patch_120hz_fps_pad_list")
 has_been_patch_120hz_fps=0
 # 节律护眼判断
@@ -41,6 +41,9 @@ is_need_patch_desktop_mode=$(check_device_is_need_patch "$device_code" "$need_pa
 # 不支持高级材质机型判断
 un_need_patch_background_blur_pad_list="dizi ruan"
 is_un_need_patch_background_blur=$(check_device_is_need_patch "$device_code" "$un_need_patch_background_blur_pad_list")
+# 优化线程判断
+need_patch_threads_pad_list="nabu enuma elish dagu pipa"
+is_need_patch_threads_pad_list=$(check_device_is_need_patch "$device_code" "$need_patch_threads_pad_list")
 
 # 基础函数
 add_props() {
@@ -140,19 +143,24 @@ if [[ "$device_type" == "redmi" ]]; then
   else
     ui_print "- 你选择不开启柔和阴影效果"
   fi
-  # 开启双线程动画
+fi
+
+# 优化动画线程调度
+if [[ "$device_type" == "redmi" || "$is_need_patch_threads_pad_list" == 1 ]]; then
   ui_print "*********************************************"
-  ui_print "- 是否开启双线程动画"
+  ui_print "- 是否优化动画线程调度"
+  ui_print "- [重要提醒]可以一定程度改善系统动画渲染时线程调度的流畅度"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "- 已开启双线程动画"
-    add_props "# 开启双线程动画"
+    ui_print "- 已优化动画线程调度"
+    add_props "# 优化动画线程调度"
     add_props "persist.sys.miui_animator_sched.sched_threads=2"
+    add_props "persist.vendor.display.miui.composer_boost=4-7"
   else
-    ui_print "- 你选择不开启双线程动画"
+    ui_print "- 你选择不优化动画线程调度"
   fi
 fi
 
@@ -306,18 +314,14 @@ if [[ "$API" -le 34 || "$has_been_patch_120hz_fps" == 1 ]]; then
   ui_print "*********************************************"
   ui_print "- 静置时是否保持当前应用刷新率上限？"
   ui_print "- [重要提示]此功能会增加系统功耗，耗电量和发热都会比日常系统策略激进，请谨慎开启！！！"
-  if [[ "$is_need_patch_120hz_fps" == 1 ]]; then
-    ui_print "- [重要提示]静置保持144hz刷新率会导致小米触控笔无法正常工作，使用触控笔请务必调整到120hz及以下！！！"
-  fi
-  ui_print "  音量+ ：是"
+  ui_print "- [重要提示]静置保持144hz刷新率会导致小米触控笔无法正常工作，使用触控笔请务必调整到120hz！！！"
+  ui_print "  音量+ ：是，且了解该功能会影响小米触控笔"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
     ui_print "- 你选择静置时保持当前应用刷新率上限"
-    if [[ "$is_need_patch_120hz_fps" == 1 ]]; then
-      ui_print "- [你已知晓]静置保持144hz刷新率会导致小米触控笔无法正常工作，使用触控笔请务必调整到120hz及以下！！！"
-    fi
+    ui_print "- [你已知晓]静置保持144hz刷新率会导致小米触控笔无法正常工作，使用触控笔请务必调整到120hz！！！"
     add_props "# 静置保持当前应用刷新率上限"
     add_props "ro.surface_flinger.use_content_detection_for_refresh_rate=true"
     add_props "ro.surface_flinger.set_idle_timer_ms=2147483647"
