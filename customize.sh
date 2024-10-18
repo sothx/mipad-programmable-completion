@@ -468,6 +468,23 @@ if [[ "$API" -ge 34 ]]; then
   fi
 fi
 
+ui_print "*********************************************"
+ui_print "- 是否开启应用预加载？"
+ui_print "- [你已知晓]需要安装受支持的系统桌面才能生效"
+ui_print "  音量+ ：是"
+ui_print "  音量- ：否"
+ui_print "*********************************************"
+key_check
+if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+  ui_print "- 已开启应用预加载"
+  ui_print "- [你已知晓]需要安装受支持的系统桌面才能生效"
+  add_props "# 开启应用预加载"
+  add_props "persist.sys.prestart.proc=true"
+else
+  ui_print "- 你选择不开启应用预加载"
+fi
+
+
 if [[ "$API" -le 33 ]]; then
   # 隐藏手势提示线
   ui_print "*********************************************"
