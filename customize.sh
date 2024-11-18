@@ -448,14 +448,14 @@ fi
 if [[ "$API" -ge 34 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否解锁\"实验室\"-\"宽高比（实验）\"功能？"
-  ui_print "- [你已知晓]需要Hyper OS 2.0才支持该项功能"
+  ui_print "- [你已知晓]需要Hyper OS 2.0才支持该项功能（目前该功能小米尚未开放）"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
     ui_print "- 已解锁\"实验室\"-\"宽高比（实验）\"功能"
-    ui_print "- [你已知晓]需要Hyper OS 2.0才支持该项功能"
+    ui_print "- [你已知晓]需要Hyper OS 2.0才支持该项功能（目前该功能小米尚未开放）"
     if [[ "$has_been_patch_device_features" == 0 ]]; then
       has_been_patch_device_features=1
       patch_device_features $MODPATH
