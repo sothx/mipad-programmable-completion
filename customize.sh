@@ -550,34 +550,21 @@ fi
 # 支持高级材质
 if [[ "$API" -ge 34 && "$is_un_need_patch_background_blur" == '0' ]]; then
   ui_print "*********************************************"
-  ui_print "- 是否开启高级材质1.0"
+  ui_print "- 是否开启高级材质"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "- 已开启高级材质1.0"
-    add_props "# 开启高级材质1.0"
+    ui_print "- 已开启高级材质"
+    add_props "# 开启高级材质"
     add_props "persist.sys.background_blur_supported=true"
     add_props "persist.sys.background_blur_status_default=true"
-    add_props "persist.sys.background_blur_mode=0"
-    ui_print "*********************************************"
-    ui_print "- 是否开启高级材质2.0"
-    ui_print "  音量+ ：是"
-    ui_print "  音量- ：否"
-    ui_print "*********************************************"
-    key_check
-    if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-      ui_print "- 已开启高级材质2.0"
-      add_props "# 开启高级材质2.0"
-      add_props "persist.sys.background_blur_version=2"
-      add_props "persist.sys.advanced_visual_release=3"
-    else
-      ui_print "- 你选择不开启高级材质2.0"
-    fi
+    add_props "persist.sys.background_blur_version=2"
+    add_props "persist.sys.advanced_visual_release=3"
   else
     ui_print "*********************************************"
-    ui_print "- 你选择不开启高级材质1.0"
+    ui_print "- 你选择不开启高级材质"
     ui_print "*********************************************"
   fi
 fi
