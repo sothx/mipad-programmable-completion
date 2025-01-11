@@ -28,8 +28,12 @@ device_soc_model="$(getprop ro.vendor.qti.soc_model)"
 redmi_pad_list="xun dizi yunluo ruan"
 device_type=$(check_device_type "$redmi_pad_list" "$device_code")
 
+# 补全多档高刷判断
+need_patch_full_fps_pad_list="pipa liuqin sheng"
+is_need_patch_full_fps=$(check_device_is_need_patch "$device_code" "$need_patch_full_fps_pad_list")
+has_been_patch_full_fps=0
 # 补全120hz判断
-need_patch_120hz_fps_pad_list="pipa liuqin sheng uke muyu"
+need_patch_120hz_fps_pad_list="uke muyu"
 is_need_patch_120hz_fps=$(check_device_is_need_patch "$device_code" "$need_patch_120hz_fps_pad_list")
 has_been_patch_120hz_fps=0
 # 节律护眼判断
@@ -283,6 +287,30 @@ if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
   add_post_fs_data 'patch_support_video_dfps $MODDIR'
 else
   ui_print "- 你选择不解锁视频工具箱智能刷新率"
+fi
+
+# 解锁多档高刷
+if [[ "$is_need_patch_full_fps" == 1 ]]; then
+  ui_print "*********************************************"
+  ui_print "- 是否解锁多档高刷(移植包可能不兼容)"
+  ui_print "- [重要提示]在Android 15+会将高刷选项的默认行为还原为Android14时的显示效果"
+  ui_print "- [重要提示]解锁后不会出现\"最高到144hz\"的高刷选项，是正常的模块行为"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    if [[ "$has_been_patch_device_features" == 0 ]]; then
+      has_been_patch_device_features=1
+      patch_device_features $MODPATH
+      add_post_fs_data 'patch_device_features $MODDIR'
+    fi
+    patch_full_fps $MODPATH
+    add_post_fs_data 'patch_full_fps $MODDIR'
+    ui_print "- 已解锁多档高刷"
+  else
+    ui_print "- 你选择不解锁多档高刷"
+  fi
 fi
 
 # 解锁120hz

@@ -95,6 +95,27 @@ patch_120hz_fps() {
   fi
 }
 
+patch_full_fps() {
+  DEVICE_CODE="$(getprop ro.product.device)"
+  SYSTEM_DEVICE_FEATURES_PATH=/system/product/etc/device_features/${DEVICE_CODE}.xml
+  MODULE_DEVICE_FEATURES_PATH="$1"/system/product/etc/device_features/${DEVICE_CODE}.xml
+  if [[ -f "$MODULE_DEVICE_FEATURES_PATH" ]]; then
+    if grep -q '<integer name="support_max_fps">144<\/integer>' $MODULE_DEVICE_FEATURES_PATH; then
+      sed -i "$(awk '/<integer-array name="fpsList">/{print NR+1; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>144</item>" $MODULE_DEVICE_FEATURES_PATH
+      sed -i "$(awk '/<integer-array name="fpsList">/{print NR+5; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>50</item>" $MODULE_DEVICE_FEATURES_PATH
+      sed -i "$(awk '/<integer-array name="fpsList">/{print NR+6; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>48</item>" $MODULE_DEVICE_FEATURES_PATH
+      sed -i "$(awk '/<integer-array name="fpsList">/{print NR+7; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>30</item>" $MODULE_DEVICE_FEATURES_PATH
+      sed -i 's/<integer name="smart_fps_value">120<\/integer>/<integer name="smart_fps_value">144<\/integer>/g' $MODULE_DEVICE_FEATURES_PATH
+      sed -i '/<integer name="support_max_fps">144<\/integer>/d' $MODULE_DEVICE_FEATURES_PATH
+    else
+      sed -i "$(awk '/<integer-array name="fpsList">/{print NR+2; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>120</item>" $MODULE_DEVICE_FEATURES_PATH
+      sed -i "$(awk '/<integer-array name="fpsList">/{print NR+5; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>50</item>" $MODULE_DEVICE_FEATURES_PATH
+      sed -i "$(awk '/<integer-array name="fpsList">/{print NR+6; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>48</item>" $MODULE_DEVICE_FEATURES_PATH
+      sed -i "$(awk '/<integer-array name="fpsList">/{print NR+7; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>30</item>" $MODULE_DEVICE_FEATURES_PATH
+    fi
+  fi
+}
+
 patch_remove_screen_off_hold_on() {
   DEVICE_CODE="$(getprop ro.product.device)"
   SYSTEM_DEVICE_FEATURES_PATH=/system/product/etc/device_features/${DEVICE_CODE}.xml
@@ -138,11 +159,11 @@ patch_wild_boost() {
 }
 
 immerse_gesture_cue_line() {
-  
+
   if [[ ! -d "$1"/system/product/media/theme/default/ ]]; then
     mkdir -p "$1"/system/product/media/theme/default/
   fi
-  
+
   # 沉浸手势提示线
   cp -rf "$1"/common/immerse_gesture_cue_line/* "$1"/system/product/media/theme/default/
 }
@@ -152,7 +173,7 @@ hide_gesture_cue_line() {
   if [[ ! -d "$1"/system/product/media/theme/default/ ]]; then
     mkdir -p "$1"/system/product/media/theme/default/
   fi
-  
+
   # 隐藏手势提示线
   cp -rf "$1"/common/hide_gesture_cue_line/* "$1"/system/product/media/theme/default/
 }
@@ -171,8 +192,15 @@ show_rotation_suggestions() {
 }
 
 create_fonts_dir() {
-  XIAOMI_MSLGRDP_PATH=/data/rootfs/home/xiaomi
-  WPS_OFFICE_PC_FONTS_DIR="$XIAOMI_MSLGRDP_PATH/.fonts"
+  MI_OS_VERSION="$(getprop ro.mi.os.version.code)"
+  # 判断 MI_OS_VERSION 是否大于等于 2
+  if [ "$MI_OS_VERSION" -ge 2 ]; then
+    XIAOMI_MSLGRDP_PATH='/storage/emulated/0/HyperEngine'
+    WPS_OFFICE_PC_FONTS_DIR="$XIAOMI_MSLGRDP_PATH/fonts"
+  else
+    XIAOMI_MSLGRDP_PATH='/data/rootfs/home/xiaomi'
+    WPS_OFFICE_PC_FONTS_DIR="$XIAOMI_MSLGRDP_PATH/.fonts"
+  fi
   if [[ -d "$XIAOMI_MSLGRDP_PATH" && ! -d "$WPS_OFFICE_PC_FONTS_DIR" ]]; then
     /bin/mkdir -p "$WPS_OFFICE_PC_FONTS_DIR"
   fi
