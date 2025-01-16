@@ -16,6 +16,11 @@ else
   fi
 fi
 
+# 赋予文件夹权限
+/bin/chmod -R 777 "$MODPATH"
+
+set_perm_recursive "$MODPATH"/common/utils 0 0 0755 0777 u:object_r:system_file:s0
+
 # 重置缓存
 # rm -rf /data/system/package_cache
 # rm -rf /data/resource-cache
@@ -27,6 +32,9 @@ device_soc_model="$(getprop ro.vendor.qti.soc_model)"
 # 红米平板判断
 redmi_pad_list="xun dizi yunluo ruan"
 device_type=$(check_device_type "$redmi_pad_list" "$device_code")
+
+has_been_patch_device_features=0
+has_been_patch_perfinit_bdsize_zram=0
 
 # 补全多档高刷判断
 need_patch_full_fps_pad_list="pipa liuqin sheng"
@@ -48,6 +56,9 @@ is_un_need_patch_background_blur=$(check_device_is_need_patch "$device_code" "$u
 # 优化线程判断
 need_patch_threads_pad_list="nabu enuma elish dagu pipa"
 is_need_patch_threads_pad_list=$(check_device_is_need_patch "$device_code" "$need_patch_threads_pad_list")
+# SWap 1:1内存优化
+need_patch_swap_pad_list="liuqin yudi pipa sheng nabu elish dagu enuma uke muyu"
+is_need_patch_swap_pad_list=$(check_device_is_need_patch "$device_code" "$need_patch_swap_pad_list")
 
 # 基础函数
 add_props() {
@@ -58,6 +69,11 @@ add_props() {
 add_post_fs_data() {
   local line="$1"
   printf "\n$line\n" >>"$MODPATH"/post-fs-data.sh
+}
+
+add_service() {
+  local line="$1"
+  printf "\n$line\n" >>"$MODPATH"/service.sh
 }
 
 key_check() {
@@ -199,6 +215,29 @@ if [[ "$is_need_patch_desktop_mode" == 1 && "$API" -ge 34 ]]; then
   fi
 fi
 
+# sWAP 1:1 内存优化
+if [[ "$is_need_patch_swap_pad_list" == 1 && "$API" -ge 35 ]]; then
+  ui_print "*********************************************"
+  ui_print "- 是否启用 Swap 1:1 内存优化?(仅Hyper OS 2 + 下生效)"
+  ui_print "- [重要提醒]内存优化最大兼容 Swap 为 16G"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 已启用 Swap 1:1 内存优化"
+    if [[ "$has_been_patch_perfinit_bdsize_zram" == 0 ]]; then
+      has_been_patch_perfinit_bdsize_zram=1
+      patch_perfinit_bdsize_zram $MODPATH
+      add_service 'patch_perfinit_bdsize_zram $MODDIR'
+    fi
+    patch_swap_config $MODPATH
+    add_service 'patch_swap_config $MODDIR'
+  else
+    ui_print "- 你选择不启用 Swap 1:1 内存优化"
+  fi
+fi
+
 # PC级WPS字体目录自动创建
 is_need_create_fonts_dir=0
 XIAOMI_MSLGRDP_PATH=/data/rootfs/home/xiaomi
@@ -248,7 +287,6 @@ if [[ "$API" -ge 33 && -f "/system/product/etc/permissions/cn.google.services.xm
   fi
 fi
 
-has_been_patch_device_features=0
 # 解锁熄屏挂机/熄屏听剧
 ui_print "*********************************************"
 ui_print "- 是否解锁熄屏挂机/熄屏听剧(移植包可能不兼容)"
@@ -511,7 +549,6 @@ if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
 else
   ui_print "- 你选择不开启应用预加载"
 fi
-
 
 if [[ "$API" -le 33 ]]; then
   # 隐藏手势提示线
