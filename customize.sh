@@ -215,7 +215,7 @@ if [[ "$is_need_patch_desktop_mode" == 1 && "$API" -ge 34 ]]; then
   fi
 fi
 
-# sWAP 1:1 内存优化
+# SWAP 1:1 内存优化
 if [[ "$is_need_patch_swap_pad_list" == 1 && "$API" -ge 35 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否启用 Swap 1:1 内存优化?(仅Hyper OS 2 + 下生效)"
