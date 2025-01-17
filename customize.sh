@@ -57,7 +57,7 @@ is_un_need_patch_background_blur=$(check_device_is_need_patch "$device_code" "$u
 need_patch_threads_pad_list="nabu enuma elish dagu pipa"
 is_need_patch_threads_pad_list=$(check_device_is_need_patch "$device_code" "$need_patch_threads_pad_list")
 # ZRAM:RAM 1:1内存优化
-need_patch_zram_pad_list="liuqin yudi pipa nabu elish dagu enuma uke muyu"
+need_patch_zram_pad_list="liuqin yudi pipa nabu elish dagu enuma"
 is_need_patch_zram_pad_list=$(check_device_is_need_patch "$device_code" "$need_patch_zram_pad_list")
 
 # 基础函数
