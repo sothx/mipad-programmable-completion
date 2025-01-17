@@ -58,7 +58,10 @@ need_patch_threads_pad_list="nabu enuma elish dagu pipa"
 is_need_patch_threads_pad_list=$(check_device_is_need_patch "$device_code" "$need_patch_threads_pad_list")
 # ZRAM:RAM 1:1内存优化
 need_patch_zram_pad_list="liuqin yudi pipa nabu elish dagu enuma"
-is_need_patch_zram_pad_list=$(check_device_is_need_patch "$device_code" "$need_patch_zram_pad_list")
+is_need_patch_zram=$(check_device_is_need_patch "$device_code" "$need_patch_zram_pad_list")
+# 需要启用DM设备映射器的机型
+need_patch_dm_opt_pad_list="liuqin yudi pipa nabu elish dagu enuma"
+is_need_patch_dm_opt=$(check_device_is_need_patch "$device_code" "$need_patch_dm_opt_pad_list")
 
 # 基础函数
 add_props() {
@@ -217,7 +220,7 @@ if [[ "$is_need_patch_desktop_mode" == 1 && "$API" -ge 34 ]]; then
 fi
 
 # ZRAM:RAM=1:1 内存优化
-if [[ "$is_need_patch_zram_pad_list" == 1 && "$API" -ge 35 ]]; then
+if [[ "$is_need_patch_zram" == 1 && "$API" -ge 35 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否启用 ZRAM:RAM=1:1 内存优化?(仅Hyper OS 2 + 下生效)"
   ui_print "- [重要提醒]内存优化最大兼容 ZRAM 为 16G"
@@ -239,7 +242,7 @@ if [[ "$is_need_patch_zram_pad_list" == 1 && "$API" -ge 35 ]]; then
   fi
 fi
 
-if [[ "$API" -ge 35 ]]; then
+if [[ "$is_need_patch_dm_opt" == 1 && "$API" -ge 35 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否启用dm设备映射器？"
   ui_print "  音量+ ：是"
