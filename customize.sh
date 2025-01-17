@@ -56,9 +56,9 @@ is_un_need_patch_background_blur=$(check_device_is_need_patch "$device_code" "$u
 # 优化线程判断
 need_patch_threads_pad_list="nabu enuma elish dagu pipa"
 is_need_patch_threads_pad_list=$(check_device_is_need_patch "$device_code" "$need_patch_threads_pad_list")
-# SWap 1:1内存优化
-need_patch_swap_pad_list="liuqin yudi pipa sheng nabu elish dagu enuma uke muyu"
-is_need_patch_swap_pad_list=$(check_device_is_need_patch "$device_code" "$need_patch_swap_pad_list")
+# ZRAM:RAM 1:1内存优化
+need_patch_zram_pad_list="liuqin yudi pipa nabu elish dagu enuma uke muyu"
+is_need_patch_zram_pad_list=$(check_device_is_need_patch "$device_code" "$need_patch_zram_pad_list")
 
 # 基础函数
 add_props() {
@@ -107,12 +107,13 @@ has_been_enabled_smartfocusio=0
 if [[ $(grep_prop persist.sys.stability.smartfocusio $magisk_path"MIUI_MagicWindow+/system.prop") ]]; then
   has_been_enabled_smartfocusio=1
 fi
-if [[ "$device_soc_model" == "SM8475" && "$device_soc_name" == "cape" && "$API" -ge 33 && $has_been_enabled_smartfocusio == 0 ]]; then
+if [[ "$device_soc_model" == "SM8475" && "$device_soc_name" == "cape" && "$API" -ge 34 && $has_been_enabled_smartfocusio == 0 ]]; then
   # 调整I/O调度
   ui_print "*********************************************"
   ui_print "- 检测到你的设备处理器属于骁龙8+Gen1"
   ui_print "- 目前骁龙8+Gen1机型的小米平板存在系统IO调度异常的问题，容易导致系统卡顿或者无响应，模块可以为你开启合适的I/O调度规则"
   ui_print "- 是否调整系统I/O调度？"
+  ui_print "- [重要提醒]在Hyper OS 2 小米已经修复此问题，Hyper OS 2下非部分特殊移植包一般不推荐开启。"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
@@ -215,26 +216,43 @@ if [[ "$is_need_patch_desktop_mode" == 1 && "$API" -ge 34 ]]; then
   fi
 fi
 
-# SWAP 1:1 内存优化
-if [[ "$is_need_patch_swap_pad_list" == 1 && "$API" -ge 35 ]]; then
+# ZRAM:RAM=1:1 内存优化
+if [[ "$is_need_patch_zram_pad_list" == 1 && "$API" -ge 35 ]]; then
   ui_print "*********************************************"
-  ui_print "- 是否启用 Swap 1:1 内存优化?(仅Hyper OS 2 + 下生效)"
-  ui_print "- [重要提醒]内存优化最大兼容 Swap 为 16G"
+  ui_print "- 是否启用 ZRAM:RAM=1:1 内存优化?(仅Hyper OS 2 + 下生效)"
+  ui_print "- [重要提醒]内存优化最大兼容 ZRAM 为 16G"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "- 已启用 Swap 1:1 内存优化"
+    ui_print "- 已启用 ZRAM:RAM=1:1 内存优化"
     if [[ "$has_been_patch_perfinit_bdsize_zram" == 0 ]]; then
       has_been_patch_perfinit_bdsize_zram=1
       patch_perfinit_bdsize_zram $MODPATH
       add_service 'patch_perfinit_bdsize_zram $MODDIR'
     fi
-    patch_swap_config $MODPATH
-    add_service 'patch_swap_config $MODDIR'
+    patch_zram_config $MODPATH
+    add_service 'patch_zram_config $MODDIR'
   else
-    ui_print "- 你选择不启用 Swap 1:1 内存优化"
+    ui_print "- 你选择不启用 ZRAM:RAM=1:1 内存优化"
+  fi
+fi
+
+if [[ "$API" -ge 35 ]]; then
+  ui_print "*********************************************"
+  ui_print "- 是否启用dm设备映射器？"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 已开启dm设备映射器"
+    ui_print "- [重要提醒]需要开启内存扩展才会生效"
+    add_props "# 开启dm设备映射器"
+    add_props "persist.miui.extm.dm_opt.enable=true"
+  else
+    ui_print "- 你选择不开启dm设备映射器"
   fi
 fi
 

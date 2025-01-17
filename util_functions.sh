@@ -291,7 +291,7 @@ patch_perfinit_bdsize_zram() {
   cp -f "$SYSTEM_PERFINIT_BDSIZE_ZRAM_PATH" "$MODULE_PERFINIT_BDSIZE_ZRAM_PATH"
 }
 
-patch_swap_config() {
+patch_zram_config() {
     MODULE_PERFINIT_BDSIZE_ZRAM_PATH="$1"/system/system_ext/etc/perfinit_bdsize_zram.conf
     DEVICE_CODE="$(getprop ro.product.device)"
     MODULE_ZRAM_TEMPLATE="$1"/common/zram_template/"$DEVICE_CODE".json
