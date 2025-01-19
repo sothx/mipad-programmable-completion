@@ -5,10 +5,19 @@ magisk_path=/data/adb/modules/
 module_id=$(grep_prop id $MODPATH/module.prop)
 
 if [[ "$KSU" == "true" ]]; then
-  ui_print "- KernelSU 用户空间当前的版本号: $KSU_VER_CODE"
-  ui_print "- KernelSU 内核空间当前的版本号: $KSU_KERNEL_VER_CODE"
+  ui_print "- KernelSU 用户空间版本号: $KSU_VER_CODE"
+  ui_print "- KernelSU 内核空间版本号: $KSU_KERNEL_VER_CODE"
+  if [ "$KSU_KERNEL_VER_CODE" -lt 11089 ]; then
+    ui_print "*********************************************"
+    ui_print "! 请安装 KernelSU 管理器 v0.6.2 或更高版本"
+    abort "*********************************************"
+  fi
+elif [[ "$APATCH" == "true" ]]; then
+  ui_print "- APatch 版本名: $APATCH_VER"
+  ui_print "- APatch 版本号: $APATCH_VER_CODE"
 else
-  ui_print "- Magisk 版本: $MAGISK_VER_CODE"
+  ui_print "- Magisk 版本名: $MAGISK_VER"
+  ui_print "- Magisk 版本号: $MAGISK_VER_CODE"
   if [ "$MAGISK_VER_CODE" -lt 26000 ]; then
     ui_print "*********************************************"
     ui_print "! 请安装 Magisk 26.0+"
@@ -17,12 +26,10 @@ else
 fi
 
 # 赋予文件夹权限
-/bin/chmod -R 777 "$MODPATH"
-
-set_perm_recursive "$MODPATH"/common/utils 0 0 0755 0777 u:object_r:system_file:s0
+set_perm_recursive "$MODPATH" 0 0 0755 0777 u:object_r:system_file:s0
 
 # 重置缓存
-# rm -rf /data/system/package_cache
+rm -rf /data/system/package_cache/*
 # rm -rf /data/resource-cache
 # 环境配置
 touch "$MODPATH"/system.prop
