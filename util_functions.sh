@@ -153,7 +153,7 @@ patch_full_fps() {
       sed -i 's/<integer name="smart_fps_value">120<\/integer>/<integer name="smart_fps_value">144<\/integer>/g' $MODULE_DEVICE_FEATURES_PATH
       sed -i '/<integer name="support_max_fps">144<\/integer>/d' $MODULE_DEVICE_FEATURES_PATH
     else
-      if [[ "$DEVICE_CODE" === 'pipa' ]]; then
+      if [[ "$DEVICE_CODE" == 'pipa' ]]; then
         sed -i "$(awk '/<integer name="smart_fps_value">144<\/integer>/{print NR+3; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>120</item>" $MODULE_DEVICE_FEATURES_PATH
         sed -i "$(awk '/<integer name="smart_fps_value">144<\/integer>/{print NR+6; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>50</item>" $MODULE_DEVICE_FEATURES_PATH
         sed -i "$(awk '/<integer name="smart_fps_value">144<\/integer>/{print NR+7; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>48</item>" $MODULE_DEVICE_FEATURES_PATH
