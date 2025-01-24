@@ -406,25 +406,27 @@ if [[ "$is_need_patch_120hz_fps" == 1 ]]; then
 fi
 
 # 静置保持当前应用刷新率上限
-ui_print "*********************************************"
-ui_print "- 静置时是否保持当前应用刷新率上限？"
-ui_print "- [重要提示]此功能会增加系统功耗，耗电量和发热都会比日常系统策略激进，请谨慎开启！！！"
-ui_print "- [重要提示]静置保持144hz刷新率会导致小米触控笔无法正常工作，使用触控笔请务必调整到120hz！！！"
-ui_print "- [重要提示]此功能非必要情况下不推荐开启~"
-ui_print "  音量+ ：是，且了解该功能会影响小米触控笔"
-ui_print "  音量- ：否"
-ui_print "*********************************************"
-key_check
-if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-  ui_print "- 你选择静置时保持当前应用刷新率上限"
-  ui_print "- [你已知晓]静置保持144hz刷新率会导致小米触控笔无法正常工作，使用触控笔请务必调整到120hz！！！"
-  add_props "# 静置保持当前应用刷新率上限"
-  add_props "ro.surface_flinger.use_content_detection_for_refresh_rate=true"
-  add_props "ro.surface_flinger.set_idle_timer_ms=2147483647"
-  add_props "ro.surface_flinger.set_touch_timer_ms=2147483647"
-  add_props "ro.surface_flinger.set_display_power_timer_ms=2147483647"
-else
-  ui_print "- 你选择静置时使用系统默认配置，不需要保持当前应用刷新率上限"
+if [[ "$API" -le 34 ]]; then
+  ui_print "*********************************************"
+  ui_print "- 静置时是否保持当前应用刷新率上限？"
+  ui_print "- [重要提示]此功能会增加系统功耗，耗电量和发热都会比日常系统策略激进，请谨慎开启！！！"
+  ui_print "- [重要提示]静置保持144hz刷新率会导致小米触控笔无法正常工作，使用触控笔请务必调整到120hz！！！"
+  ui_print "- [重要提示]此功能非必要情况下不推荐开启~"
+  ui_print "  音量+ ：是，且了解该功能会影响小米触控笔"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 你选择静置时保持当前应用刷新率上限"
+    ui_print "- [你已知晓]静置保持144hz刷新率会导致小米触控笔无法正常工作，使用触控笔请务必调整到120hz！！！"
+    add_props "# 静置保持当前应用刷新率上限"
+    add_props "ro.surface_flinger.use_content_detection_for_refresh_rate=true"
+    add_props "ro.surface_flinger.set_idle_timer_ms=2147483647"
+    add_props "ro.surface_flinger.set_touch_timer_ms=2147483647"
+    add_props "ro.surface_flinger.set_display_power_timer_ms=2147483647"
+  else
+    ui_print "- 你选择静置时使用系统默认配置，不需要保持当前应用刷新率上限"
+  fi
 fi
 
 # 解锁节律护眼
