@@ -229,14 +229,17 @@ fi
 # ZRAM:RAM=1:1 内存优化
 if [[ "$is_need_patch_zram" == 1 && "$API" -ge 35 ]]; then
   ui_print "*********************************************"
-  ui_print "- 是否启用 ZRAM:RAM=1:1 内存优化?(仅Hyper OS 2 + 下生效)"
+  ui_print "- 是否启用 ZRAM:RAM=1:1 内存优化?（第三方内核可能不生效）"
   ui_print "- [重要提醒]内存优化最大兼容 ZRAM 为 16G"
+  ui_print "- [重要提醒]可能会与其他内存相关模块冲突导致不生效"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
     ui_print "- 已启用 ZRAM:RAM=1:1 内存优化"
+    ui_print "- [重要提醒]内存优化最大兼容 ZRAM 为 16G"
+    ui_print "- [重要提醒]可能会与其他内存相关模块冲突导致不生效"
     if [[ "$has_been_patch_perfinit_bdsize_zram" == 0 ]]; then
       has_been_patch_perfinit_bdsize_zram=1
       patch_perfinit_bdsize_zram $MODPATH
@@ -251,7 +254,9 @@ fi
 
 if [[ "$is_need_patch_dm_opt" == 1 && "$API" -ge 35 ]]; then
   ui_print "*********************************************"
-  ui_print "- 是否启用dm设备映射器？"
+  ui_print "- 是否启用dm设备映射器？（第三方内核可能不生效）"
+  ui_print "- [重要提醒]一般推荐启用，通常用于将设备上的冷数据压缩并迁移到硬盘上"
+  ui_print "- [重要提醒]需要开启内存扩展才会生效"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
@@ -545,14 +550,14 @@ fi
 if [[ "$API" -ge 34 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否解锁\"实验室\"-\"宽高比（实验）\"功能？"
-  ui_print "- [你已知晓]需要Hyper OS 2.0才支持该项功能（目前该功能小米尚未开放）"
+  ui_print "- [你已知晓]目前该功能小米尚未开放，是否开启暂无任何区别"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
     ui_print "- 已解锁\"实验室\"-\"宽高比（实验）\"功能"
-    ui_print "- [你已知晓]需要Hyper OS 2.0才支持该项功能（目前该功能小米尚未开放）"
+    ui_print "- [你已知晓]目前该功能小米尚未开放，是否开启暂无任何区别"
     if [[ "$has_been_patch_device_features" == 0 ]]; then
       has_been_patch_device_features=1
       patch_device_features $MODPATH
@@ -613,6 +618,7 @@ if [[ "$API" -ge 34 ]]; then
     ui_print "*********************************************"
     ui_print "- 需要沉浸还是隐藏优化手势提示线？(仅在默认主题下生效，Android 14+ 可用)"
     ui_print "- [重要提醒]沉浸手势提示线可能会导致部分应用底部有细小白边"
+    ui_print "- [重要提醒]如果不生效请尝试给予系统框架和系统桌面的ROOT权限"
     ui_print "  音量+ ：沉浸"
     ui_print "  音量- ：隐藏"
     ui_print "*********************************************"
@@ -620,9 +626,11 @@ if [[ "$API" -ge 34 ]]; then
     if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
       ui_print "- 已沉浸手势提示线，仅在默认主题下生效"
       ui_print "- [重要提醒]沉浸手势提示线可能会导致部分应用底部有细小白边"
+      ui_print "- [重要提醒]如果不生效请尝试给予系统框架和系统桌面的ROOT权限"
       immerse_gesture_cue_line $MODPATH
     else
       ui_print "- 已隐藏手势提示线，仅在默认主题下生效"
+      ui_print "- [重要提醒]如果不生效请尝试给予系统框架和系统桌面的ROOT权限"
       hide_gesture_cue_line $MODPATH
     fi
   else
