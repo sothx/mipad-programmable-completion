@@ -109,7 +109,21 @@ key_check() {
 if [[ -d "$magisk_path$module_id" ]]; then
   ui_print "*********************************************"
   ui_print "模块不支持覆盖更新，请卸载模块并重启平板后再尝试安装！"
-  abort "*********************************************"
+  ui_print "强行覆盖更新会导致模块数据异常，可能导致系统出现不可预料的异常问题！"
+  ui_print "(APatch可能首次安装也会出现覆盖更新的提醒，这种情况下可以选择忽略)"
+  ui_print "  音量+ ：哼，我偏要装(强制安装)"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "*********************************************"
+    ui_print "- 你选择了强制安装！！！"
+    ui_print "*********************************************"
+  else
+    ui_print "*********************************************"
+    ui_print "- 请卸载模块并重启平板后再尝试安装QwQ！！！"
+    abort "*********************************************"
+  fi
 fi
 
 # 骁龙8+Gen1机型判断
@@ -583,7 +597,6 @@ if [[ "$API" -le 34 ]]; then
     ui_print "- [你已知晓]需要安装受支持的系统桌面才能生效"
     add_props "# 开启应用预加载"
     add_props "persist.sys.prestart.proc=true"
-    add_props "persist.sys.preload.enable=true"
   else
     ui_print "- 你选择不开启应用预加载"
   fi
@@ -637,6 +650,22 @@ if [[ "$API" -ge 34 ]]; then
     ui_print "- 你选择不优化手势提示线"
   fi
 fi
+
+# 启用动态壁纸景深
+# if [[ "$API" -ge 35 ]]; then
+#   ui_print "*********************************************"
+#   ui_print "- 是否启用动态壁纸景深"
+#   ui_print "  音量+ ：是"
+#   ui_print "  音量- ：否"
+#   ui_print "*********************************************"
+#   key_check
+#   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+#     ui_print "- 已启用动态壁纸景深"
+#     enable_video_depth $MODPATH
+#   else
+#     ui_print "- 你选择不启用动态壁纸景深"
+#   fi
+# fi
 
 # 开启平滑圆角
 ui_print "*********************************************"
