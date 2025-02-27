@@ -230,6 +230,16 @@ hide_gesture_cue_line() {
   cp -rf "$1"/common/hide_gesture_cue_line/* "$1"/system/product/media/theme/default/
 }
 
+patch_celluar_shared() {
+
+  if [[ ! -d "$1"/system/product/media/theme/default/ ]]; then
+    mkdir -p "$1"/system/product/media/theme/default/
+  fi
+
+  # 启用通信共享
+  cp -rf "$1"/common/celluar_shared/* "$1"/system/product/media/theme/default/
+}
+
 grep_prop() {
   local REGEX="s/^$1=//p"
   shift

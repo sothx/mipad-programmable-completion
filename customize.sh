@@ -69,6 +69,9 @@ is_need_patch_zram=$(check_device_is_need_patch "$device_code" "$need_patch_zram
 # 需要启用DM设备映射器的机型
 need_patch_dm_opt_pad_list="liuqin yudi pipa nabu elish dagu enuma"
 is_need_patch_dm_opt=$(check_device_is_need_patch "$device_code" "$need_patch_dm_opt_pad_list")
+# 需要补全通信共享的机型
+need_patch_celluar_shared_pad_list="dagu"
+is_need_patch_celluar_shared=$(check_device_is_need_patch "$device_code" "$need_patch_celluar_shared_pad_list")
 
 # 基础函数
 add_props() {
@@ -282,6 +285,21 @@ if [[ "$is_need_patch_dm_opt" == 1 && "$API" -ge 35 ]]; then
     add_props "persist.miui.extm.dm_opt.enable=true"
   else
     ui_print "- 你选择不开启dm设备映射器"
+  fi
+fi
+
+if [[ "$is_need_patch_celluar_shared" == 1 && "$API" -ge 34 ]]; then
+  ui_print "*********************************************"
+  ui_print "- 是否启用通信共享？(仅在默认主题下生效)"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 已启用通信共享，仅在默认主题下生效"
+    patch_celluar_shared $MODPATH
+  else
+    ui_print "- 你选择不启用通信共享"
   fi
 fi
 
