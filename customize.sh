@@ -291,12 +291,14 @@ fi
 if [[ "$is_need_patch_celluar_shared" == 1 && "$API" -ge 34 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否启用通信共享？(仅在默认主题下生效)"
+  ui_print "- [重要提醒]需要Hyper OS 2才会生效"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
     ui_print "- 已启用通信共享，仅在默认主题下生效"
+    ui_print "- [重要提醒]需要Hyper OS 2才会生效"
     patch_celluar_shared $MODPATH
   else
     ui_print "- 你选择不启用通信共享"
