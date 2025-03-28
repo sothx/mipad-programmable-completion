@@ -305,6 +305,29 @@ if [[ "$is_need_patch_celluar_shared" == 1 && "$API" -ge 34 ]]; then
   fi
 fi
 
+# 移除OTA验证
+ui_print "*********************************************"
+ui_print "- 是否移除OTA验证？"
+ui_print "- [你已知晓]可绕过 ROM 权限校验"
+ui_print "- [你已知晓]不支持任何非官方 ROM 使用"
+ui_print "- [你已知晓]此功能有一定危险性，请在了解 Fastboot 操作后再评估是否开启"
+ui_print "  音量+ ：是"
+ui_print "  音量- ：否"
+ui_print "*********************************************"
+key_check
+if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+  ui_print "- 已移除OTA验证"
+  if [[ "$has_been_patch_device_features" == 0 ]]; then
+    has_been_patch_device_features=1
+    patch_device_features $MODPATH
+    add_post_fs_data 'patch_device_features $MODDIR'
+  fi
+  patch_disabled_ota_validate $MODPATH
+  add_post_fs_data 'patch_disabled_ota_validate $MODDIR'
+else
+  ui_print "- 你选择不移除OTA验证"
+fi
+
 # PC级WPS字体目录自动创建
 is_need_create_fonts_dir=0
 XIAOMI_MSLGRDP_PATH=/data/rootfs/home/xiaomi
@@ -606,19 +629,17 @@ fi
 
 if [[ "$API" -le 34 ]]; then
   ui_print "*********************************************"
-  ui_print "- 是否开启应用预加载？"
-  ui_print "- [你已知晓]需要安装受支持的系统桌面才能生效"
+  ui_print "- 是否禁用应用预加载？"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "- 已开启应用预加载"
-    ui_print "- [你已知晓]需要安装受支持的系统桌面才能生效"
-    add_props "# 开启应用预加载"
-    add_props "persist.sys.prestart.proc=true"
+    ui_print "- 已禁用应用预加载"
+    add_props "# 禁用应用预加载"
+    add_props "persist.sys.prestart.proc=false"
   else
-    ui_print "- 你选择不开启应用预加载"
+    ui_print "- 你选择不禁用应用预加载"
   fi
 fi
 
