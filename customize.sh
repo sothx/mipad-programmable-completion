@@ -72,6 +72,12 @@ is_need_patch_dm_opt=$(check_device_is_need_patch "$device_code" "$need_patch_dm
 # 需要补全通信共享的机型
 need_patch_celluar_shared_pad_list="dagu"
 is_need_patch_celluar_shared=$(check_device_is_need_patch "$device_code" "$need_patch_celluar_shared_pad_list")
+#需要开启Ultra HDR的设备
+# Ultra HDR 启用条件
+MIN_API_FOR_ULTRA_HDR=34       # Android 14: API 34
+HDR_SYS_PROP_CHECK="ro.hardware.hdr|sys.display.hdr"  # HDR 硬件支持属性
+
+
 
 # 基础函数
 add_props() {
@@ -745,6 +751,32 @@ if [[ "$API" -ge 34 && "$is_un_need_patch_background_blur" == '0' ]]; then
     ui_print "*********************************************"
   fi
 fi
+
+#开启Ultra HDR
+ui_print "*********************************************"
+ui_print "- 是否开启 Ultra HDR"
+ui_print "  音量+ ：是（仅限支持设备）"
+ui_print "  音量- ：否"
+ui_print "*********************************************"
+key_check
+
+if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+  if [[ "$is_hdr_supported" == "true" ]]; then
+    ui_print "- ✅ 已开启 Ultra HDR"
+    # 优先使用厂商兼容写法（部分 ROM 可能仅需这个）
+    echo "persist.sys.support_ultra_hdr=true" >> $MODPATH/system.prop
+    # 附加标准 Ultra HDR 兼容性配置（某些厂商需要）
+    echo "persist.sys.ultra_hdr_enabled=1" >> $MODPATH/system.prop
+    echo "debug.sf.hdr_format=2" >> $MODPATH/system.prop
+  else
+    ui_print "- ❌ 设备不支持 Ultra HDR"
+    ui_print "  （需 Android 15+ & HDR 硬件）"
+  fi
+else
+  ui_print "- 未开启 Ultra HDR"
+fi
+
+
 
 ui_print "*********************************************"
 ui_print "- 好诶w，模块已经安装完成了，重启平板后生效"
