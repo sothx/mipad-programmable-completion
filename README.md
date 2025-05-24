@@ -74,6 +74,10 @@ settings put secure show_rotation_suggestions 1
 ```bash
 settings put secure speed_mode_enable 1
 ```
+- 开启Ultra HD
+```bash
+persist.sys.support_ultra_hdr=true
+```
 
 ## 模块注意事项
 如果不需要屏幕旋转建议可以手动关闭，通过MT管理器的终端模拟器输入如下命令:
