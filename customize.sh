@@ -72,12 +72,12 @@ is_need_patch_dm_opt=$(check_device_is_need_patch "$device_code" "$need_patch_dm
 # 需要补全通信共享的机型
 need_patch_celluar_shared_pad_list="dagu"
 is_need_patch_celluar_shared=$(check_device_is_need_patch "$device_code" "$need_patch_celluar_shared_pad_list")
-#需要开启Ultra HDR的设备
-# Ultra HDR 启用条件
-MIN_API_FOR_ULTRA_HDR=34       # Android 14: API 34
-HDR_SYS_PROP_CHECK="ro.hardware.hdr|sys.display.hdr"  # HDR 硬件支持属性
-
-
+# 需要开启Ultra HDR的设备
+need_patch_hdr_supportd_pad_list="liuqin yudi pipa sheng"
+is_need_patch_hdr_supportd_pad_list=$(check_device_is_need_patch "$device_code" "$need_patch_hdr_supportd_pad_list")
+# 小米澎湃AI功能补全
+need_patch_eyecare_mode_pad_list="pipa liuqin yudi zizhan babylon dagu yunluo xun"
+is_need_patch_eyecare_mode=$(check_device_is_need_patch "$device_code" "$need_patch_eyecare_mode_pad_list")
 
 # 基础函数
 add_props() {
@@ -752,31 +752,86 @@ if [[ "$API" -ge 34 && "$is_un_need_patch_background_blur" == '0' ]]; then
   fi
 fi
 
-#开启Ultra HDR
-ui_print "*********************************************"
-ui_print "- 是否开启 Ultra HDR"
-ui_print "  音量+ ：是（仅限支持设备）"
-ui_print "  音量- ：否"
-ui_print "*********************************************"
-key_check
-
-if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-  if [[ "$is_hdr_supported" == "true" ]]; then
-    ui_print "- ✅ 已开启 Ultra HDR"
-    # 优先使用厂商兼容写法（部分 ROM 可能仅需这个）
-    echo "persist.sys.support_ultra_hdr=true" >> $MODPATH/system.prop
-    # 附加标准 Ultra HDR 兼容性配置（某些厂商需要）
-    echo "persist.sys.ultra_hdr_enabled=1" >> $MODPATH/system.prop
-    echo "debug.sf.hdr_format=2" >> $MODPATH/system.prop
+if [[ "$API" -le 34 ]]; then
+  # 解锁小米澎湃AI功能
+  ui_print "*********************************************"
+  ui_print "- 是否解锁小米系统应用Hyper AI功能？"
+  ui_print "- (包括小米笔记AI、小米录音机AI和AI动态壁纸)"
+  ui_print "- (不生效请给予对应系统应用root权限或关闭默认卸载)"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 已解锁小米系统应用Hyper AI功能"
+    unlock_system_app_hyper_ai $MODPATH
   else
-    ui_print "- ❌ 设备不支持 Ultra HDR"
-    ui_print "  （需 Android 15+ & HDR 硬件）"
+    ui_print "- 你选择不解锁小米系统应用Hyper AI功能"
   fi
-else
-  ui_print "- 未开启 Ultra HDR"
 fi
 
+if [[ "$API" -le 34 ]]; then
+  # 解锁小米天气动态效果
+  ui_print "*********************************************"
+  ui_print "- 是否解锁小米天气动态效果？"
+  ui_print "- (不生效请给予对应小米天气root权限或关闭默认卸载)"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 已解锁小米天气动态效果"
+    weather_animation_support $MODPATH
+  else
+    ui_print "- 你选择不解锁小米天气动态效果"
+  fi
+fi
 
+#开启HDR支持
+if [[ "$is_need_patch_hdr_supportd_pad_list" == 1 && "$API" -ge 35 ]]; then
+  ui_print "*********************************************"
+  ui_print "- 是否开启 HDR 支持？"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 已开启 HDR 支持"
+    add_props "# 开启 Ultra HDR"
+    add_props "persist.sys.support_ultra_hdr=true"
+    if [[ "$has_been_patch_device_features" == 0 ]]; then
+      has_been_patch_device_features=1
+      patch_device_features $MODPATH
+      add_post_fs_data 'patch_device_features $MODDIR'
+    fi
+    patch_hdr_support $MODPATH
+    add_post_fs_data 'patch_hdr_support $MODDIR'
+  else
+    ui_print "- 你选择不开启 HDR 支持"
+  fi
+fi
+
+# 应用启动延迟优化
+if [[ "$API" -le 35 ]]; then
+  # 应用启动延迟优化
+  ui_print "*********************************************"
+  ui_print "- 是否启用应用启动延迟优化？"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 启用应用启动延迟优化"
+    ui_print "- (旗舰机型是否启用无明显区别，对中低端机型效果明显)"
+    ui_print "- (部分机型处于系统桌面黑名单限制，需搭配修改版系统桌面)"
+    add_props "persist.sys.hyper_transition_v=2"
+    add_props "persist.sys.hyper_transition=true"
+    add_props "ro.miui.shell_anim_enable_fcb=2"
+  else
+    ui_print "- 你选择不启用应用启动延迟优化"
+  fi
+fi
 
 ui_print "*********************************************"
 ui_print "- 好诶w，模块已经安装完成了，重启平板后生效"

@@ -230,6 +230,15 @@ hide_gesture_cue_line() {
   cp -rf "$1"/common/hide_gesture_cue_line/* "$1"/system/product/media/theme/default/
 }
 
+unlock_system_app_hyper_ai() {
+
+  if [[ ! -d "$1"/system/product/overlay ]]; then
+    mkdir -p "$1"/system/product/overlay/
+  fi
+
+  cp -rf "$1"/common/hyper_ai_supported/* "$1"/system/product/overlay/
+}
+
 patch_celluar_shared() {
 
   if [[ ! -d "$1"/system/product/media/theme/default/ ]]; then
@@ -313,4 +322,22 @@ patch_zram_config() {
     DEVICE_CODE="$(getprop ro.product.device)"
     MODULE_ZRAM_TEMPLATE="$1"/common/zram_template/"$DEVICE_CODE".json
     $JQ_UTILS '.zram += [input | {product_name, zram_size}]' $MODULE_PERFINIT_BDSIZE_ZRAM_PATH $MODULE_ZRAM_TEMPLATE > temp.json && mv temp.json $MODULE_PERFINIT_BDSIZE_ZRAM_PATH
+}
+
+patch_hdr_support() {
+  DEVICE_CODE="$(getprop ro.product.device)"
+  SYSTEM_DEVICE_FEATURES_PATH=/system/product/etc/device_features/${DEVICE_CODE}.xml
+  MODULE_DEVICE_FEATURES_PATH="$1"/system/product/etc/device_features/${DEVICE_CODE}.xml
+  if [[ -f "$MODULE_DEVICE_FEATURES_PATH" ]]; then
+    # 开启HDR增强
+    sed -i "$(awk '/<\/features>/{print NR-0; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    <bool name=\"support_hdr_enhance\">true</bool>" $MODULE_DEVICE_FEATURES_PATH
+  fi
+}
+
+weather_animation_support() {
+  if [[ ! -d "$1"/system/product/overlay ]]; then
+    mkdir -p "$1"/system/product/overlay/
+  fi
+
+  cp -rf "$1"/common/weather_animateion_support/* "$1"/system/product/weather_animateion_support/
 }
