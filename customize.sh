@@ -36,6 +36,8 @@ touch "$MODPATH"/system.prop
 device_code="$(getprop ro.product.device)"
 device_soc_name="$(getprop ro.vendor.qti.soc_name)"
 device_soc_model="$(getprop ro.vendor.qti.soc_model)"
+# 移植包补全144hz
+project_treble_support_144hz="$(getprop ro.config.sothx_project_treble_support_144hz)"
 # 红米平板判断
 redmi_pad_list="xun dizi yunluo ruan"
 device_type=$(check_device_type "$redmi_pad_list" "$device_code")
@@ -46,11 +48,9 @@ has_been_patch_perfinit_bdsize_zram=0
 # 补全多档高刷判断
 need_patch_full_fps_pad_list="pipa liuqin sheng"
 is_need_patch_full_fps=$(check_device_is_need_patch "$device_code" "$need_patch_full_fps_pad_list")
-has_been_patch_full_fps=0
 # 补全120hz判断
 need_patch_120hz_fps_pad_list="uke muyu"
 is_need_patch_120hz_fps=$(check_device_is_need_patch "$device_code" "$need_patch_120hz_fps_pad_list")
-has_been_patch_120hz_fps=0
 # 节律护眼判断
 need_patch_eyecare_mode_pad_list="pipa liuqin yudi zizhan babylon dagu yunluo xun"
 is_need_patch_eyecare_mode=$(check_device_is_need_patch "$device_code" "$need_patch_eyecare_mode_pad_list")
@@ -442,7 +442,6 @@ if [[ "$is_need_patch_full_fps" == 1 ]]; then
     patch_full_fps $MODPATH
     add_post_fs_data 'patch_full_fps $MODDIR'
     ui_print "- 已解锁多档高刷"
-    has_been_patch_full_fps=1
   else
     ui_print "- 你选择不解锁多档高刷"
   fi
@@ -467,9 +466,34 @@ if [[ "$is_need_patch_120hz_fps" == 1 ]]; then
     patch_120hz_fps $MODPATH
     add_post_fs_data 'patch_120hz_fps $MODDIR'
     ui_print "- 已解锁120hz高刷"
-    has_been_patch_120hz_fps=1
   else
     ui_print "- 你选择不解锁120hz高刷"
+  fi
+fi
+
+# 移植包是否补全144hz
+if [[ "$project_treble_support_144hz" == 'true' ]]; then
+  ui_print "*********************************************"
+  ui_print "- 是否解锁144z高刷(移植包专用，仅部分移植包支持)"
+  ui_print "- [重要提示]在Android 15+会将高刷选项的默认行为还原为Android14时的显示效果"
+  ui_print "- [重要提示]解锁后不会出现\"最高到144hz\"的高刷选项，是正常的模块行为"
+  ui_print "- [重要提示]解锁后使用触控笔需要手动固定在120hz刷新率"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    if [[ "$has_been_patch_device_features" == 0 ]]; then
+      has_been_patch_device_features=1
+      patch_device_features $MODPATH
+      add_post_fs_data 'patch_device_features $MODDIR'
+    fi
+    patch_project_treble_144hz $MODPATH
+    add_post_fs_data 'patch_project_treble_144hz $MODDIR'
+    ui_print "- 已解锁移植包144hz高刷"
+    ui_print "- [重要提示]解锁后使用触控笔需要手动固定在120hz刷新率"
+  else
+    ui_print "- 你选择不解锁移植包144hz高刷"
   fi
 fi
 
@@ -791,6 +815,7 @@ fi
 if [[ "$is_need_patch_hdr_supportd_pad_list" == 1 && "$API" -ge 35 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否开启 HDR 支持？"
+  ui_print "- [重要提醒]不支持小米相册的HDR"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
@@ -798,6 +823,7 @@ if [[ "$is_need_patch_hdr_supportd_pad_list" == 1 && "$API" -ge 35 ]]; then
 
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
     ui_print "- 已开启 HDR 支持"
+    ui_print "- [重要提醒]不支持小米相册的HDR"
     add_props "# 开启 Ultra HDR"
     add_props "persist.sys.support_ultra_hdr=true"
     if [[ "$has_been_patch_device_features" == 0 ]]; then
