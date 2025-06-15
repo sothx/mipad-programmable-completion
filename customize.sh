@@ -70,9 +70,9 @@ is_need_patch_zram=$(check_device_is_need_patch "$device_code" "$need_patch_zram
 # 需要启用DM设备映射器的机型
 need_patch_dm_opt_pad_list="liuqin yudi pipa nabu elish dagu enuma"
 is_need_patch_dm_opt=$(check_device_is_need_patch "$device_code" "$need_patch_dm_opt_pad_list")
-# 需要补全通信共享的机型
-need_patch_celluar_shared_pad_list="dagu"
-is_need_patch_celluar_shared=$(check_device_is_need_patch "$device_code" "$need_patch_celluar_shared_pad_list")
+# # 需要补全通信共享的机型
+# need_patch_celluar_shared_pad_list="dagu"
+# is_need_patch_celluar_shared=$(check_device_is_need_patch "$device_code" "$need_patch_celluar_shared_pad_list")
 # 需要开启Ultra HDR的设备
 need_patch_hdr_supportd_pad_list="liuqin yudi pipa sheng"
 is_need_patch_hdr_supportd_pad_list=$(check_device_is_need_patch "$device_code" "$need_patch_hdr_supportd_pad_list")
@@ -295,22 +295,22 @@ if [[ "$is_need_patch_dm_opt" == 1 && "$API" -ge 35 ]]; then
   fi
 fi
 
-if [[ "$is_need_patch_celluar_shared" == 1 && "$API" -ge 34 ]]; then
-  ui_print "*********************************************"
-  ui_print "- 是否启用通信共享？(仅在默认主题下生效)"
-  ui_print "- [重要提醒]需要Hyper OS 2才会生效"
-  ui_print "  音量+ ：是"
-  ui_print "  音量- ：否"
-  ui_print "*********************************************"
-  key_check
-  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "- 已启用通信共享，仅在默认主题下生效"
-    ui_print "- [重要提醒]需要Hyper OS 2才会生效"
-    patch_celluar_shared $MODPATH
-  else
-    ui_print "- 你选择不启用通信共享"
-  fi
-fi
+# if [[ "$is_need_patch_celluar_shared" == 1 && "$API" -ge 34 ]]; then
+#   ui_print "*********************************************"
+#   ui_print "- 是否启用通信共享？(仅在默认主题下生效)"
+#   ui_print "- [重要提醒]需要Hyper OS 2才会生效"
+#   ui_print "  音量+ ：是"
+#   ui_print "  音量- ：否"
+#   ui_print "*********************************************"
+#   key_check
+#   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+#     ui_print "- 已启用通信共享，仅在默认主题下生效"
+#     ui_print "- [重要提醒]需要Hyper OS 2才会生效"
+#     patch_celluar_shared $MODPATH
+#   else
+#     ui_print "- 你选择不启用通信共享"
+#   fi
+# fi
 
 # 移除OTA验证
 ui_print "*********************************************"
