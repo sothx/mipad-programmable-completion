@@ -30,7 +30,7 @@ set_perm_recursive "$MODPATH" 0 0 0755 0777 u:object_r:system_file:s0
 
 # 重置缓存
 rm -rf /data/system/package_cache/*
-# rm -rf /data/resource-cache
+rm -rf /data/resource-cache
 # 环境配置
 touch "$MODPATH"/system.prop
 device_code="$(getprop ro.product.device)"
@@ -38,6 +38,7 @@ device_soc_name="$(getprop ro.vendor.qti.soc_name)"
 device_soc_model="$(getprop ro.vendor.qti.soc_model)"
 # 移植包补全144hz
 project_treble_support_144hz="$(getprop ro.config.sothx_project_treble_support_144hz)"
+ui_print "project_treble_support_144hz=$project_treble_support_144hz"
 # 红米平板判断
 redmi_pad_list="xun dizi yunluo ruan"
 device_type=$(check_device_type "$redmi_pad_list" "$device_code")
@@ -424,11 +425,10 @@ else
 fi
 
 # 解锁多档高刷
-if [[ "$is_need_patch_full_fps" == 1 ]]; then
+if [[ "$is_need_patch_full_fps" == 1 && "$project_treble_support_144hz" != 'true' ]]; then
   ui_print "*********************************************"
   ui_print "- 是否解锁多档高刷(移植包可能不兼容)"
-  ui_print "- [重要提示]在Android 15+会将高刷选项的默认行为还原为Android14时的显示效果"
-  ui_print "- [重要提示]解锁后不会出现\"最高到144hz\"的高刷选项，是正常的模块行为"
+  ui_print "- [重要提示]\"最高到144hz\"的机型实际最高刷新率为120hz"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
@@ -448,7 +448,7 @@ if [[ "$is_need_patch_full_fps" == 1 ]]; then
 fi
 
 # 解锁120hz
-if [[ "$is_need_patch_120hz_fps" == 1 ]]; then
+if [[ "$is_need_patch_120hz_fps" == 1 && "$project_treble_support_144hz" != 'true' ]]; then
   ui_print "*********************************************"
   ui_print "- 是否解锁120hz高刷(移植包可能不兼容)"
   ui_print "- [重要提示]在Android 15+会将高刷选项的默认行为还原为Android14时的显示效果"
@@ -471,31 +471,6 @@ if [[ "$is_need_patch_120hz_fps" == 1 ]]; then
   fi
 fi
 
-# 移植包是否补全144hz
-if [[ "$project_treble_support_144hz" == 'true' ]]; then
-  ui_print "*********************************************"
-  ui_print "- 是否解锁144z高刷(移植包专用，仅部分移植包支持)"
-  ui_print "- [重要提示]在Android 15+会将高刷选项的默认行为还原为Android14时的显示效果"
-  ui_print "- [重要提示]解锁后不会出现\"最高到144hz\"的高刷选项，是正常的模块行为"
-  ui_print "- [重要提示]解锁后使用触控笔需要手动固定在120hz刷新率"
-  ui_print "  音量+ ：是"
-  ui_print "  音量- ：否"
-  ui_print "*********************************************"
-  key_check
-  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    if [[ "$has_been_patch_device_features" == 0 ]]; then
-      has_been_patch_device_features=1
-      patch_device_features $MODPATH
-      add_post_fs_data 'patch_device_features $MODDIR'
-    fi
-    patch_project_treble_144hz $MODPATH
-    add_post_fs_data 'patch_project_treble_144hz $MODDIR'
-    ui_print "- 已解锁移植包144hz高刷"
-    ui_print "- [重要提示]解锁后使用触控笔需要手动固定在120hz刷新率"
-  else
-    ui_print "- 你选择不解锁移植包144hz高刷"
-  fi
-fi
 
 # 静置保持当前应用刷新率上限
 if [[ "$API" -le 34 ]]; then
@@ -794,7 +769,7 @@ if [[ "$API" -le 34 ]]; then
   fi
 fi
 
-if [[ "$API" -le 34 ]]; then
+if [[ "$API" -ge 34 ]]; then
   # 解锁小米天气动态效果
   ui_print "*********************************************"
   ui_print "- 是否解锁小米天气动态效果？"
@@ -839,7 +814,7 @@ if [[ "$is_need_patch_hdr_supportd_pad_list" == 1 && "$API" -ge 35 ]]; then
 fi
 
 # 应用启动延迟优化
-if [[ "$API" -le 35 ]]; then
+if [[ "$API" -ge 35 ]]; then
   # 应用启动延迟优化
   ui_print "*********************************************"
   ui_print "- 是否启用应用启动延迟优化？"

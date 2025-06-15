@@ -148,6 +148,7 @@ patch_project_treble_144hz() {
     if grep -q '<integer name="support_max_fps">144<\/integer>' $MODULE_DEVICE_FEATURES_PATH; then
       sed -i "$(awk '/<integer-array name="fpsList">/{print NR+1; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>144</item>" $MODULE_DEVICE_FEATURES_PATH
       sed -i 's/<integer name="smart_fps_value">120<\/integer>/<integer name="smart_fps_value">144<\/integer>/g' $MODULE_DEVICE_FEATURES_PATH
+      sed -i 's/<bool name="support_smart_fps">true<\/bool>/<bool name="support_smart_fps">false<\/bool>/g' $MODULE_DEVICE_FEATURES_PATH
       sed -i '/<integer name="support_max_fps">144<\/integer>/d' $MODULE_DEVICE_FEATURES_PATH
     fi
   fi
@@ -159,12 +160,12 @@ patch_full_fps() {
   MODULE_DEVICE_FEATURES_PATH="$1"/system/product/etc/device_features/${DEVICE_CODE}.xml
   if [[ -f "$MODULE_DEVICE_FEATURES_PATH" ]]; then
     if grep -q '<integer name="support_max_fps">144<\/integer>' $MODULE_DEVICE_FEATURES_PATH; then
-      sed -i "$(awk '/<integer-array name="fpsList">/{print NR+1; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>144</item>" $MODULE_DEVICE_FEATURES_PATH
+      # sed -i "$(awk '/<integer-array name="fpsList">/{print NR+1; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>144</item>" $MODULE_DEVICE_FEATURES_PATH
       sed -i "$(awk '/<integer-array name="fpsList">/{print NR+5; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>50</item>" $MODULE_DEVICE_FEATURES_PATH
       sed -i "$(awk '/<integer-array name="fpsList">/{print NR+6; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>48</item>" $MODULE_DEVICE_FEATURES_PATH
       sed -i "$(awk '/<integer-array name="fpsList">/{print NR+7; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>30</item>" $MODULE_DEVICE_FEATURES_PATH
-      sed -i 's/<integer name="smart_fps_value">120<\/integer>/<integer name="smart_fps_value">144<\/integer>/g' $MODULE_DEVICE_FEATURES_PATH
-      sed -i '/<integer name="support_max_fps">144<\/integer>/d' $MODULE_DEVICE_FEATURES_PATH
+      # sed -i 's/<integer name="smart_fps_value">120<\/integer>/<integer name="smart_fps_value">144<\/integer>/g' $MODULE_DEVICE_FEATURES_PATH
+      # sed -i '/<integer name="support_max_fps">144<\/integer>/d' $MODULE_DEVICE_FEATURES_PATH
     else
       if [[ "$DEVICE_CODE" == 'pipa' ]]; then
         sed -i "$(awk '/<integer name="smart_fps_value">144<\/integer>/{print NR+3; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>120</item>" $MODULE_DEVICE_FEATURES_PATH
@@ -188,6 +189,16 @@ patch_remove_screen_off_hold_on() {
   if [[ -f "$MODULE_DEVICE_FEATURES_PATH" ]]; then
     # 启用熄屏听剧/熄屏挂机
     sed -i 's/<bool name="remove_screen_off_hold_on">true<\/bool>/<bool name="remove_screen_off_hold_on">false<\/bool>/g' $MODULE_DEVICE_FEATURES_PATH
+  fi
+}
+
+patch_disabled_ota_validate() {
+  DEVICE_CODE="$(getprop ro.product.device)"
+  SYSTEM_DEVICE_FEATURES_PATH=/system/product/etc/device_features/${DEVICE_CODE}.xml
+  MODULE_DEVICE_FEATURES_PATH="$1"/system/product/etc/device_features/${DEVICE_CODE}.xml
+  if [[ -f "$MODULE_DEVICE_FEATURES_PATH" ]]; then
+    # 去除ota校验
+    sed -i 's/<bool name="support_ota_validate">true<\/bool>/<bool name="support_ota_validate">false<\/bool>/g' $MODULE_DEVICE_FEATURES_PATH
   fi
 }
 
