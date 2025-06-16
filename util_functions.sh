@@ -358,10 +358,10 @@ patch_hdr_support() {
   fi
 }
 
-weather_animation_support() {
+patch_weather_animation_support() {
   if [[ ! -d "$1"/system/product/overlay ]]; then
     mkdir -p "$1"/system/product/overlay/
   fi
 
-  cp -rf "$1"/common/weather_animateion_support/* "$1"/system/product/weather_animateion_support/
+  cp -rf "$1"/common/weather_animateion_support/* "$1"/system/product/overlay/
 }

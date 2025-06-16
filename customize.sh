@@ -75,10 +75,7 @@ is_need_patch_dm_opt=$(check_device_is_need_patch "$device_code" "$need_patch_dm
 # is_need_patch_celluar_shared=$(check_device_is_need_patch "$device_code" "$need_patch_celluar_shared_pad_list")
 # 需要开启Ultra HDR的设备
 need_patch_hdr_supportd_pad_list="liuqin yudi pipa sheng"
-is_need_patch_hdr_supportd_pad_list=$(check_device_is_need_patch "$device_code" "$need_patch_hdr_supportd_pad_list")
-# 小米澎湃AI功能补全
-need_patch_eyecare_mode_pad_list="pipa liuqin yudi zizhan babylon dagu yunluo xun"
-is_need_patch_eyecare_mode=$(check_device_is_need_patch "$device_code" "$need_patch_eyecare_mode_pad_list")
+is_need_patch_hdr_supportd=$(check_device_is_need_patch "$device_code" "$need_patch_hdr_supportd_pad_list")
 
 # 基础函数
 add_props() {
@@ -677,7 +674,7 @@ if [[ "$API" -ge 34 ]]; then
     ui_print "*********************************************"
     ui_print "- 需要沉浸还是隐藏优化手势提示线？(仅在默认主题下生效，Android 14+ 可用)"
     ui_print "- [重要提醒]沉浸手势提示线可能会导致部分应用底部有细小白边"
-    ui_print "- [重要提醒]如果不生效请尝试给予系统框架和系统桌面的ROOT权限"
+    ui_print "- (如果不生效请尝试给予系统框架和系统桌面的root权限或关闭默认卸载)"
     ui_print "  音量+ ：沉浸"
     ui_print "  音量- ：隐藏"
     ui_print "*********************************************"
@@ -685,11 +682,11 @@ if [[ "$API" -ge 34 ]]; then
     if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
       ui_print "- 已沉浸手势提示线，仅在默认主题下生效"
       ui_print "- [重要提醒]沉浸手势提示线可能会导致部分应用底部有细小白边"
-      ui_print "- [重要提醒]如果不生效请尝试给予系统框架和系统桌面的ROOT权限"
+      ui_print "- (如果不生效请尝试给予系统框架和系统桌面的root权限或关闭默认卸载)"
       immerse_gesture_cue_line $MODPATH
     else
       ui_print "- 已隐藏手势提示线，仅在默认主题下生效"
-      ui_print "- [重要提醒]如果不生效请尝试给予系统框架和系统桌面的ROOT权限"
+      ui_print "- (如果不生效请尝试给予系统框架和系统桌面的root权限或关闭默认卸载)"
       hide_gesture_cue_line $MODPATH
     fi
   else
@@ -751,10 +748,11 @@ if [[ "$API" -ge 34 && "$is_un_need_patch_background_blur" == '0' ]]; then
   fi
 fi
 
-if [[ "$API" -le 34 ]]; then
+if [[ "$API" -ge 34 ]]; then
   # 解锁小米澎湃AI功能
   ui_print "*********************************************"
   ui_print "- 是否解锁小米系统应用Hyper AI功能？"
+  ui_print "- (需要Hyper OS 2才会生效)"
   ui_print "- (包括小米笔记AI、小米录音机AI和AI动态壁纸)"
   ui_print "- (不生效请给予对应系统应用root权限或关闭默认卸载)"
   ui_print "  音量+ ：是"
@@ -769,25 +767,25 @@ if [[ "$API" -le 34 ]]; then
   fi
 fi
 
-if [[ "$API" -ge 34 ]]; then
-  # 解锁小米天气动态效果
-  ui_print "*********************************************"
-  ui_print "- 是否解锁小米天气动态效果？"
-  ui_print "- (不生效请给予对应小米天气root权限或关闭默认卸载)"
-  ui_print "  音量+ ：是"
-  ui_print "  音量- ：否"
-  ui_print "*********************************************"
-  key_check
-  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "- 已解锁小米天气动态效果"
-    weather_animation_support $MODPATH
-  else
-    ui_print "- 你选择不解锁小米天气动态效果"
-  fi
-fi
+# if [[ "$API" -ge 34 ]]; then
+#   # 解锁小米天气动态效果
+#   ui_print "*********************************************"
+#   ui_print "- 是否解锁小米天气动态效果？"
+#   ui_print "- (不生效请给予对应小米天气root权限或关闭默认卸载)"
+#   ui_print "  音量+ ：是"
+#   ui_print "  音量- ：否"
+#   ui_print "*********************************************"
+#   key_check
+#   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+#     ui_print "- 已解锁小米天气动态效果"
+#     patch_weather_animation_support $MODPATH
+#   else
+#     ui_print "- 你选择不解锁小米天气动态效果"
+#   fi
+# fi
 
 #开启HDR支持
-if [[ "$is_need_patch_hdr_supportd_pad_list" == 1 && "$API" -ge 35 ]]; then
+if [[ "$is_need_patch_hdr_supportd" == 1 && "$API" -ge 35 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否开启 HDR 支持？"
   ui_print "- [重要提醒]不支持小米相册的HDR"
@@ -817,7 +815,7 @@ fi
 if [[ "$API" -ge 35 ]]; then
   # 应用启动延迟优化
   ui_print "*********************************************"
-  ui_print "- 是否启用应用启动延迟优化？"
+  ui_print "- 是否启用旗舰机应用启动延迟优化？"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
