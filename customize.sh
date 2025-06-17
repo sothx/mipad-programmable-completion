@@ -805,7 +805,7 @@ if [[ "$API" -ge 35 ]]; then
 fi
 
 # 处理 Overlay类 需求
-if [[ "$is_need_patch_overlay_img" == "true" ]] && [[ "$RootImplement" == "Magisk" ]]; then
+if [[ "$is_need_patch_overlay_img" == "true" ]] && ([[ "$RootImplement" == "Magisk" ]] || [[ "$RootImplement" == "APatch" ]]); then
   pack_overlay $MODPATH
   echo >>"$MODPATH"/post-fs-data.sh
   cat "$MODPATH"/overlay_mount.sh >>"$MODPATH"/post-fs-data.sh
