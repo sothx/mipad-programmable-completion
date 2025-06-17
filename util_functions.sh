@@ -350,9 +350,7 @@ pack_overlay() {
   touch "$1"/system/product/product_fs_config
   touch "$1"/system/product/product_file_contexts
   add_lines "/ u:object_r:system_file:s0" "$1"/system/product/product_file_contexts
-  # add_lines "/overlay u:object_r:system_file:s0" "$1"/system/product/product_file_contexts
   add_lines "/ 0 0 0755" "$1"/system/product/product_fs_config
-  # add_lines "/overlay 0 0 0755" "$1"/system/product/product_fs_config
   while IFS= read -r -d '' file; do
     filename=${file##*/}
     add_lines "/${filename//./\\.} u:object_r:system_file:s0" "$1"/system/product/product_file_contexts
