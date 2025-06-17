@@ -1,40 +1,28 @@
-api_level_arch_detect() {
-  API=$(getprop ro.build.version.sdk)
-  ABI=$(getprop ro.product.cpu.abi)
-  if [ "$ABI" = "x86" ]; then
-    ARCH=x86
-    ABI32=x86
-    IS64BIT=false
-  elif [ "$ABI" = "arm64-v8a" ]; then
-    ARCH=arm64
-    ABI32=armeabi-v7a
-    IS64BIT=true
-  elif [ "$ABI" = "x86_64" ]; then
-    ARCH=x64
-    ABI32=x86
-    IS64BIT=true
-  else
-    ARCH=arm
-    ABI=armeabi-v7a
-    ABI32=armeabi-v7a
-    IS64BIT=false
-  fi
+# shellcheck disable=SC2034,SC2059,SC2086,SC2124,SC2148
+
+add_lines() {
+  local content="$1"
+  local file="$2"
+  printf "\n$content\n" >>"$file"
 }
 
-set_perm() {
-  chown $2:$3 $1 || return 1
-  chmod $4 $1 || return 1
-  local CON=$5
-  [ -z $CON ] && CON=u:object_r:system_file:s0
-  chcon $CON $1 || return 1
-}
-
-set_perm_recursive() {
-  find $1 -type d 2>/dev/null | while read dir; do
-    set_perm $dir $2 $3 $4 $6
+key_check() {
+  while true; do
+    key_check=$(/system/bin/getevent -qlc 1)
+    key_event=$(echo "$key_check" | awk '{ print $3 }' | grep 'KEY_')
+    key_status=$(echo "$key_check" | awk '{ print $4 }')
+    if [[ "$key_event" == *"KEY_"* && "$key_status" == "DOWN" ]]; then
+      keycheck="$key_event"
+      break
+    fi
   done
-  find $1 -type f -o -type l 2>/dev/null | while read file; do
-    set_perm $file $2 $3 $5 $6
+  while true; do
+    key_check=$(/system/bin/getevent -qlc 1)
+    key_event=$(echo "$key_check" | awk '{ print $3 }' | grep 'KEY_')
+    key_status=$(echo "$key_check" | awk '{ print $4 }')
+    if [[ "$key_event" == *"KEY_"* && "$key_status" == "UP" ]]; then
+      break
+    fi
   done
 }
 
@@ -56,7 +44,7 @@ update_system_prop() {
     sed -i "s/^$prop=.*/$prop=$value/" "$file"
   else
     # 如果没有找到匹配行，追加新行
-    printf "$prop=$value\n" >> "$file"
+    printf "$prop=$value\n" >>"$file"
   fi
 }
 
@@ -256,18 +244,19 @@ hide_gesture_cue_line() {
 
 unlock_system_app_hyper_ai() {
 
-  # if [[ ! -d "$1"/system/product/overlay ]]; then
-  #   mkdir -p "$1"/system/product/overlay/
-  # fi
+  if [[ ! -d "$1"/system/product/overlay ]]; then
+    mkdir -p "$1"/system/product/overlay/
+  fi
+  cp -rf "$1"/common/hyper_ai_supported/* "$1"/system/product/overlay/
 
-  # cp -rf "$1"/common/hyper_ai_supported/* "$1"/system/product/overlay/
+}
 
-  if [[ ! -d "$1"/system/product/media/theme/default/ ]]; then
-    mkdir -p "$1"/system/product/media/theme/default/
+patch_weather_animation_support() {
+  if [[ ! -d "$1"/system/product/overlay ]]; then
+    mkdir -p "$1"/system/product/overlay/
   fi
 
-  # 解锁小米澎湃AI功能
-  cp -rf "$1"/common/hyper_ai_supported_theme/* "$1"/system/product/media/theme/default/
+  cp -rf "$1"/common/weather_animateion_support/* "$1"/system/product/overlay/
 }
 
 patch_celluar_shared() {
@@ -278,14 +267,6 @@ patch_celluar_shared() {
 
   # 启用通信共享
   cp -rf "$1"/common/celluar_shared/* "$1"/system/product/media/theme/default/
-}
-
-grep_prop() {
-  local REGEX="s/^$1=//p"
-  shift
-  local FILES=$@
-  [ -z "$FILES" ] && FILES='/system/build.prop'
-  cat $FILES 2>/dev/null | dos2unix | sed -n "$REGEX" | head -n 1
 }
 
 show_rotation_suggestions() {
@@ -349,10 +330,10 @@ patch_perfinit_bdsize_zram() {
 }
 
 patch_zram_config() {
-    MODULE_PERFINIT_BDSIZE_ZRAM_PATH="$1"/system/system_ext/etc/perfinit_bdsize_zram.conf
-    DEVICE_CODE="$(getprop ro.product.device)"
-    MODULE_ZRAM_TEMPLATE="$1"/common/zram_template/"$DEVICE_CODE".json
-    $JQ_UTILS '.zram += [input | {product_name, zram_size}]' $MODULE_PERFINIT_BDSIZE_ZRAM_PATH $MODULE_ZRAM_TEMPLATE > temp.json && mv temp.json $MODULE_PERFINIT_BDSIZE_ZRAM_PATH
+  MODULE_PERFINIT_BDSIZE_ZRAM_PATH="$1"/system/system_ext/etc/perfinit_bdsize_zram.conf
+  DEVICE_CODE="$(getprop ro.product.device)"
+  MODULE_ZRAM_TEMPLATE="$1"/common/zram_template/"$DEVICE_CODE".json
+  $JQ_UTILS '.zram += [input | {product_name, zram_size}]' $MODULE_PERFINIT_BDSIZE_ZRAM_PATH $MODULE_ZRAM_TEMPLATE >temp.json && mv temp.json $MODULE_PERFINIT_BDSIZE_ZRAM_PATH
 }
 
 patch_hdr_support() {
@@ -365,10 +346,20 @@ patch_hdr_support() {
   fi
 }
 
-patch_weather_animation_support() {
-  if [[ ! -d "$1"/system/product/overlay ]]; then
-    mkdir -p "$1"/system/product/overlay/
-  fi
-
-  cp -rf "$1"/common/weather_animateion_support/* "$1"/system/product/overlay/
+pack_overlay() {
+  touch "$1"/system/product/product_fs_config
+  touch "$1"/system/product/product_file_contexts
+  add_lines "/ u:object_r:system_file:s0" "$1"/system/product/product_file_contexts
+  # add_lines "/overlay u:object_r:system_file:s0" "$1"/system/product/product_file_contexts
+  add_lines "/ 0 0 0755" "$1"/system/product/product_fs_config
+  # add_lines "/overlay 0 0 0755" "$1"/system/product/product_fs_config
+  while IFS= read -r -d '' file; do
+    filename=${file##*/}
+    add_lines "/${filename//./\\.} u:object_r:system_file:s0" "$1"/system/product/product_file_contexts
+    add_lines "/$filename 0 0 0644" "$1"/system/product/product_fs_config
+  done < <(find "$1"/system/product/overlay -type f -name '*.apk' -print0)
+  sed -i -e '/^$/d' "$1"/system/product/product_fs_config "$1"/system/product/product_file_contexts
+  /bin/mkfs.erofs -T 1230768000 --quiet --fs-config-file "$1"/system/product/product_fs_config --file-contexts "$1"/system/product/product_file_contexts "$1"/overlay.img "$1"/system/product/overlay >/dev/null 2>&1
+  rm -rf "$1"/system/product/product_fs_config "$1"/system/product/product_file_contexts "$1"/system/product/overlay
+  mount -t erofs -o overlay.img ./overlay
 }
