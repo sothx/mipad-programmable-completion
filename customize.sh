@@ -748,24 +748,24 @@ if [[ "$API" -ge 34 && "$is_un_need_patch_background_blur" == '0' ]]; then
   fi
 fi
 
-if [[ "$API" -ge 34 ]]; then
-  # 解锁小米澎湃AI功能
-  ui_print "*********************************************"
-  ui_print "- 是否解锁小米系统应用Hyper AI功能？"
-  ui_print "- (需要Hyper OS 2才会生效)"
-  ui_print "- (包括小米笔记AI、小米录音机AI和AI动态壁纸)"
-  ui_print "- (不生效请给予对应系统应用root权限或关闭默认卸载)"
-  ui_print "  音量+ ：是"
-  ui_print "  音量- ：否"
-  ui_print "*********************************************"
-  key_check
-  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "- 已解锁小米系统应用Hyper AI功能"
-    unlock_system_app_hyper_ai $MODPATH
-  else
-    ui_print "- 你选择不解锁小米系统应用Hyper AI功能"
-  fi
-fi
+# if [[ "$API" -ge 34 ]]; then
+#   # 解锁小米澎湃AI功能
+#   ui_print "*********************************************"
+#   ui_print "- 是否解锁小米系统应用Hyper AI功能？"
+#   ui_print "- (需要Hyper OS 2才会生效)"
+#   ui_print "- (包括小米笔记AI、小米录音机AI和AI动态壁纸)"
+#   ui_print "- (不生效请给予对应系统应用root权限或关闭默认卸载)"
+#   ui_print "  音量+ ：是"
+#   ui_print "  音量- ：否"
+#   ui_print "*********************************************"
+#   key_check
+#   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+#     ui_print "- 已解锁小米系统应用Hyper AI功能"
+#     unlock_system_app_hyper_ai $MODPATH
+#   else
+#     ui_print "- 你选择不解锁小米系统应用Hyper AI功能"
+#   fi
+# fi
 
 # if [[ "$API" -ge 34 ]]; then
 #   # 解锁小米天气动态效果

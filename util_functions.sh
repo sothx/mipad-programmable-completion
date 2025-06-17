@@ -256,11 +256,18 @@ hide_gesture_cue_line() {
 
 unlock_system_app_hyper_ai() {
 
-  if [[ ! -d "$1"/system/product/overlay ]]; then
-    mkdir -p "$1"/system/product/overlay/
+  # if [[ ! -d "$1"/system/product/overlay ]]; then
+  #   mkdir -p "$1"/system/product/overlay/
+  # fi
+
+  # cp -rf "$1"/common/hyper_ai_supported/* "$1"/system/product/overlay/
+
+  if [[ ! -d "$1"/system/product/media/theme/default/ ]]; then
+    mkdir -p "$1"/system/product/media/theme/default/
   fi
 
-  cp -rf "$1"/common/hyper_ai_supported/* "$1"/system/product/overlay/
+  # 解锁小米澎湃AI功能
+  cp -rf "$1"/common/hyper_ai_supported_theme/* "$1"/system/product/media/theme/default/
 }
 
 patch_celluar_shared() {
