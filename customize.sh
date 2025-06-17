@@ -576,28 +576,28 @@ else
 fi
 
 # 解锁宽高比（实验）功能
-if [[ "$API" -ge 34 ]]; then
-  ui_print "*********************************************"
-  ui_print "- 是否解锁\"实验室\"-\"宽高比（实验）\"功能？"
-  ui_print "- [你已知晓]目前该功能小米尚未开放，是否开启暂无任何区别"
-  ui_print "  音量+ ：是"
-  ui_print "  音量- ：否"
-  ui_print "*********************************************"
-  key_check
-  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "- 已解锁\"实验室\"-\"宽高比（实验）\"功能"
-    ui_print "- [你已知晓]目前该功能小米尚未开放，是否开启暂无任何区别"
-    if [[ "$has_been_patch_device_features" == 0 ]]; then
-      has_been_patch_device_features=1
-      patch_device_features $MODPATH
-      add_lines 'patch_app_compat_aspect_ratio_user_settings $MODDIR' "$MODPATH"/post-fs-data.sh
-    fi
-    patch_app_compat_aspect_ratio_user_settings $MODPATH
-    add_lines 'patch_app_compat_aspect_ratio_user_settings $MODDIR' "$MODPATH"/post-fs-data.sh
-  else
-    ui_print "- 你选择不解锁\"实验室\"-\"宽高比（实验）\"功能"
-  fi
-fi
+# if [[ "$API" -ge 34 ]]; then
+#   ui_print "*********************************************"
+#   ui_print "- 是否解锁\"实验室\"-\"宽高比（实验）\"功能？"
+#   ui_print "- [你已知晓]目前该功能小米尚未开放，是否开启暂无任何区别"
+#   ui_print "  音量+ ：是"
+#   ui_print "  音量- ：否"
+#   ui_print "*********************************************"
+#   key_check
+#   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+#     ui_print "- 已解锁\"实验室\"-\"宽高比（实验）\"功能"
+#     ui_print "- [你已知晓]目前该功能小米尚未开放，是否开启暂无任何区别"
+#     if [[ "$has_been_patch_device_features" == 0 ]]; then
+#       has_been_patch_device_features=1
+#       patch_device_features $MODPATH
+#       add_lines 'patch_app_compat_aspect_ratio_user_settings $MODDIR' "$MODPATH"/post-fs-data.sh
+#     fi
+#     patch_app_compat_aspect_ratio_user_settings $MODPATH
+#     add_lines 'patch_app_compat_aspect_ratio_user_settings $MODDIR' "$MODPATH"/post-fs-data.sh
+#   else
+#     ui_print "- 你选择不解锁\"实验室\"-\"宽高比（实验）\"功能"
+#   fi
+# fi
 
 if [[ "$API" -le 34 ]]; then
   ui_print "*********************************************"
@@ -738,23 +738,23 @@ if [[ "$API" -ge 34 ]]; then
   fi
 fi
 
-if [[ "$API" -ge 34 ]]; then
-  # 解锁小米天气动态效果
-  ui_print "*********************************************"
-  ui_print "- 是否解锁小米天气动态效果？"
-  ui_print "- (不生效请给予对应小米天气root权限或关闭默认卸载)"
-  ui_print "  音量+ ：是"
-  ui_print "  音量- ：否"
-  ui_print "*********************************************"
-  key_check
-  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "- 已解锁小米天气动态效果"
-    patch_weather_animation_support $MODPATH
-    is_need_patch_overlay_img=true
-  else
-    ui_print "- 你选择不解锁小米天气动态效果"
-  fi
-fi
+# if [[ "$API" -ge 34 ]]; then
+#   # 解锁小米天气动态效果
+#   ui_print "*********************************************"
+#   ui_print "- 是否解锁小米天气动态效果？"
+#   ui_print "- (不生效请给予对应小米天气root权限或关闭默认卸载)"
+#   ui_print "  音量+ ：是"
+#   ui_print "  音量- ：否"
+#   ui_print "*********************************************"
+#   key_check
+#   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+#     ui_print "- 已解锁小米天气动态效果"
+#     patch_weather_animation_support $MODPATH
+#     is_need_patch_overlay_img=true
+#   else
+#     ui_print "- 你选择不解锁小米天气动态效果"
+#   fi
+# fi
 
 #开启HDR支持
 if [[ "$is_need_patch_hdr_supportd" == 1 && "$API" -ge 35 ]]; then
