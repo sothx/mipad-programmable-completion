@@ -1,4 +1,4 @@
-# shellcheck disable=SC1091,SC2016,SC2034,SC2059,SC2086,SC2148
+# shellcheck disable=SC1091,SC2016,SC2034,SC2059,SC2086,SC2148,SC2154
 
 SKIPUNZIP=0
 . "$MODPATH"/util_functions.sh
@@ -93,7 +93,6 @@ if [[ -d "$magisk_path$module_id" ]]; then
   ui_print "  音量- ：否"
   ui_print "*********************************************"
   key_check
-  # shellcheck disable=SC2154
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
     ui_print "*********************************************"
     ui_print "- 你选择了强制安装！！！"
