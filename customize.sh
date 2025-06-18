@@ -822,12 +822,13 @@ if [[ "$is_need_patch_overlay_img" == "true" ]] && [[ "$RootImplement" == "Kerne
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    ui_print "- 你选择强制使用OverlayFS"
     pack_overlay $MODPATH
     echo >>"$MODPATH"/post-fs-data.sh
     cat "$MODPATH"/overlay_mount.sh >>"$MODPATH"/post-fs-data.sh
   else
     rm -rf "$MODPATH"/overlay_mount.sh
-    ui_print "- 你选择不强制使用OverlayFS来尝试解决Overlay导致的系统界面异常"
+    ui_print "- 你选择不强制使用OverlayFS"
   fi
 fi
 
