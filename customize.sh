@@ -809,8 +809,26 @@ if [[ "$is_need_patch_overlay_img" == "true" ]] && [[ "$RootImplement" != "Kerne
   pack_overlay $MODPATH
   echo >>"$MODPATH"/post-fs-data.sh
   cat "$MODPATH"/overlay_mount.sh >>"$MODPATH"/post-fs-data.sh
-else
-  rm -rf "$MODPATH"/overlay_mount.sh
+fi
+
+if [[ "$is_need_patch_overlay_img" == "true" ]] && [[ "$RootImplement" == "KernelSU" ]]; then
+  # 强制使用OverlayFS来尝试解决Overlay导致的系统界面异常
+  ui_print "*********************************************"
+  ui_print "- 是否强制使用OverlayFS来尝试解决模块Overlay导致的系统界面异常？"
+  ui_print "- (正常情况下不建议开启，KernelSU 本身就有自身的OverlayFS机制)"
+  ui_print "- (如果您遇到系统界面异常抽搐，可以尝试强制使用OverlayFS来解决该问题)"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    pack_overlay $MODPATH
+    echo >>"$MODPATH"/post-fs-data.sh
+    cat "$MODPATH"/overlay_mount.sh >>"$MODPATH"/post-fs-data.sh
+  else
+    rm -rf "$MODPATH"/overlay_mount.sh
+    ui_print "- 你选择不强制使用OverlayFS来尝试解决Overlay导致的系统界面异常"
+  fi
 fi
 
 sed -i -e '/^$/d' "$MODPATH"/system.prop "$MODPATH"/post-fs-data.sh "$MODPATH"/service.sh
