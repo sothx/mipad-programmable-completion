@@ -3,7 +3,7 @@
 add_lines() {
   local content="$1"
   local file="$2"
-  printf "\n$content\n" >>"$file"
+  printf "\n$content\n" >> "$file"
 }
 
 key_check() {
@@ -23,6 +23,23 @@ key_check() {
     if [[ "$key_event" == *"KEY_"* && "$key_status" == "UP" ]]; then
       break
     fi
+  done
+}
+
+set_perm() {
+  chown $2:$3 $1 || return 1
+  chmod $4 $1 || return 1
+  local CON=$5
+  [ -z $CON ] && CON=u:object_r:system_file:s0
+  chcon $CON $1 || return 1
+}
+
+set_perm_recursive() {
+  find $1 -type d 2>/dev/null | while read dir; do
+    set_perm $dir $2 $3 $4 $6
+  done
+  find $1 -type f -o -type l 2>/dev/null | while read file; do
+    set_perm $file $2 $3 $5 $6
   done
 }
 
@@ -136,8 +153,7 @@ patch_project_treble_144hz() {
     if grep -q '<integer name="support_max_fps">144<\/integer>' $MODULE_DEVICE_FEATURES_PATH; then
       sed -i "$(awk '/<integer-array name="fpsList">/{print NR+1; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>144</item>" $MODULE_DEVICE_FEATURES_PATH
       sed -i 's/<integer name="smart_fps_value">120<\/integer>/<integer name="smart_fps_value">144<\/integer>/g' $MODULE_DEVICE_FEATURES_PATH
-      sed -i 's/<bool name="support_smart_fps">true<\/bool>/<bool name="support_smart_fps">false<\/bool>/g' $MODULE_DEVICE_FEATURES_PATH
-      sed -i '/<integer name="support_max_fps">144<\/integer>/d' $MODULE_DEVICE_FEATURES_PATH
+      # sed -i '/<integer name="support_max_fps">144<\/integer>/d' $MODULE_DEVICE_FEATURES_PATH
     fi
   fi
 }
@@ -343,8 +359,10 @@ patch_hdr_support() {
   if [[ -f "$MODULE_DEVICE_FEATURES_PATH" ]]; then
     # 开启HDR增强
     sed -i "$(awk '/<\/features>/{print NR-0; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    <bool name=\"support_hdr_enhance\">true</bool>" $MODULE_DEVICE_FEATURES_PATH
+    sed -i "$(awk '/<\/features>/{print NR-0; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    <bool name=\"support_displayfeature_gamemode_HDR\">true</bool>" $MODULE_DEVICE_FEATURES_PATH
   fi
 }
+
 
 pack_overlay() {
   touch "$1"/system/product/product_fs_config

@@ -392,6 +392,33 @@ else
   ui_print "- 你选择不解锁视频工具箱智能刷新率"
 fi
 
+# 移植包是否补全144hz
+if [[ "$project_treble_support_144hz" == 'true' ]]; then
+  ui_print "*********************************************"
+  ui_print "- 是否解锁144z高刷(移植包专用，仅部分移植包支持)"
+  ui_print "- [重要提示]在Android 15+会将高刷选项的默认行为还原为Android14时的显示效果"
+  ui_print "- [重要提示]解锁后不会出现\"最高到144hz\"的高刷选项，是正常的模块行为"
+  ui_print "- [重要提示]解锁后使用触控笔需要手动固定在120hz刷新率"
+  ui_print "  音量+ ：是"
+  ui_print "  音量- ：否"
+  ui_print "*********************************************"
+  key_check
+  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+    if [[ "$has_been_patch_device_features" == 0 ]]; then
+      has_been_patch_device_features=1
+      patch_device_features $MODPATH
+      add_lines 'patch_device_features $MODDIR' "$MODPATH"/post-fs-data.sh
+    fi
+    patch_project_treble_144hz $MODPATH
+    add_lines 'patch_project_treble_144hz $MODDIR' "$MODPATH"/post-fs-data.sh
+    ui_print "- 已解锁移植包144hz高刷"
+    ui_print "- [重要提示]解锁后使用触控笔需要手动固定在120hz刷新率"
+  else
+    ui_print "- 你选择不解锁移植包144hz高刷"
+  fi
+fi
+
+
 # 解锁多档高刷
 if [[ "$is_need_patch_full_fps" == 1 && "$project_treble_support_144hz" != 'true' ]]; then
   ui_print "*********************************************"
