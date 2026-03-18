@@ -224,6 +224,7 @@ if [[ "$is_need_patch_zram" == 1 && "$API" -ge 35 ]]; then
   ui_print "- 是否启用 ZRAM:RAM=1:1 内存优化?（第三方内核可能不生效）"
   ui_print "- [重要提醒]内存优化最大兼容 ZRAM 为 16G"
   ui_print "- [重要提醒]可能会与其他内存相关模块冲突导致不生效"
+  ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
@@ -232,6 +233,7 @@ if [[ "$is_need_patch_zram" == 1 && "$API" -ge 35 ]]; then
     ui_print "- 已启用 ZRAM:RAM=1:1 内存优化"
     ui_print "- [重要提醒]内存优化最大兼容 ZRAM 为 16G"
     ui_print "- [重要提醒]可能会与其他内存相关模块冲突导致不生效"
+    ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
     if [[ "$has_been_patch_perfinit_bdsize_zram" == 0 ]]; then
       has_been_patch_perfinit_bdsize_zram=1
       patch_perfinit_bdsize_zram $MODPATH
@@ -286,6 +288,7 @@ ui_print "- 是否移除OTA验证？"
 ui_print "- [你已知晓]可绕过 ROM 权限校验"
 ui_print "- [你已知晓]不支持任何非官方 ROM 使用"
 ui_print "- [你已知晓]此功能有一定危险性，请在了解 Fastboot 操作后再评估是否开启"
+ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
 ui_print "  音量+ ：是"
 ui_print "  音量- ：否"
 ui_print "*********************************************"
@@ -339,12 +342,14 @@ if [[ "$API" -ge 33 && -f "/system/product/etc/permissions/cn.google.services.xm
   ui_print "*********************************************"
   ui_print "- 是否解除谷歌服务框架的区域限制？"
   ui_print "- [重要提醒]解除谷歌服务框架区域限制后可以使用 Google Play 快速分享等功能~"
+  ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
   key_check
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
     ui_print "- 已解除谷歌服务框架的区域限制"
+    ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
     patch_cn_google_services $MODPATH
     add_lines 'patch_cn_google_services $MODDIR' "$MODPATH"/post-fs-data.sh
   else
@@ -355,6 +360,7 @@ fi
 # 解锁熄屏挂机/熄屏听剧
 ui_print "*********************************************"
 ui_print "- 是否解锁熄屏挂机/熄屏听剧(移植包可能不兼容)"
+ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
 ui_print "  音量+ ：是"
 ui_print "  音量- ：否"
 ui_print "*********************************************"
@@ -375,6 +381,7 @@ fi
 # 解锁视频工具箱智能刷新率
 ui_print "*********************************************"
 ui_print "- 是否解锁视频工具箱智能刷新率(移植包可能不兼容)"
+ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
 ui_print "  音量+ ：是"
 ui_print "  音量- ：否"
 ui_print "*********************************************"
@@ -424,6 +431,7 @@ if [[ "$is_need_patch_full_fps" == 1 && "$project_treble_support_144hz" != 'true
   ui_print "*********************************************"
   ui_print "- 是否解锁多档高刷(移植包可能不兼容)"
   ui_print "- [重要提示]\"最高到144hz\"的机型实际最高刷新率为120hz"
+  ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
@@ -448,6 +456,7 @@ if [[ "$is_need_patch_120hz_fps" == 1 && "$project_treble_support_144hz" != 'tru
   ui_print "- 是否解锁120hz高刷(移植包可能不兼容)"
   ui_print "- [重要提示]在Android 15+会将高刷选项的默认行为还原为Android14时的显示效果"
   ui_print "- [重要提示]解锁后不会出现\"最高到144hz\"的高刷选项，是正常的模块行为"
+  ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
@@ -494,6 +503,7 @@ fi
 if [[ "$is_need_patch_eyecare_mode" == 1 && "$API" -ge 34 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否解锁节律护眼(Hyper OS 生效，移植包可能不兼容)"
+  ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
@@ -567,6 +577,7 @@ if [[ "$API" -ge 33 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否解锁游戏工具箱\"狂暴引擎\"UI界面？(移植包可能不兼容)"
   ui_print "- [重要提示]该功能仅为开启\"狂暴引擎\"的UI界面，并非真的添加\"狂暴引擎\"功能，也无法开启feas！！！"
+  ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
@@ -574,6 +585,7 @@ if [[ "$API" -ge 33 ]]; then
   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
     ui_print "- 已解锁游戏工具箱\"狂暴引擎\"UI界面"
     ui_print "- [你已知晓]该功能仅为开启\"狂暴引擎\"的UI界面，并非真的添加\"狂暴引擎\"功能，也无法开启feas！！！"
+    ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
     if [[ "$has_been_patch_device_features" == 0 ]]; then
       has_been_patch_device_features=1
       patch_device_features $MODPATH
@@ -646,6 +658,7 @@ if [[ "$API" -le 33 ]]; then
   # 隐藏手势提示线
   ui_print "*********************************************"
   ui_print "- 是否隐藏手势提示线？(仅在默认主题下生效，Android 13 可用)"
+  ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
@@ -663,6 +676,7 @@ if [[ "$API" -ge 34 ]]; then
   # 优化手势提示线
   ui_print "*********************************************"
   ui_print "- 是否优化手势提示线？(仅在默认主题下生效，Android 14+ 可用)"
+  ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
@@ -671,6 +685,7 @@ if [[ "$API" -ge 34 ]]; then
     ui_print "*********************************************"
     ui_print "- 需要沉浸还是隐藏优化手势提示线？(仅在默认主题下生效，Android 14+ 可用)"
     ui_print "- [重要提醒]沉浸手势提示线可能会导致部分应用底部有细小白边"
+  ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
     ui_print "- (如果不生效请尝试给予系统框架和系统桌面的root权限或关闭默认卸载)"
     ui_print "  音量+ ：沉浸"
     ui_print "  音量- ：隐藏"
@@ -679,10 +694,12 @@ if [[ "$API" -ge 34 ]]; then
     if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
       ui_print "- 已沉浸手势提示线，仅在默认主题下生效"
       ui_print "- [重要提醒]沉浸手势提示线可能会导致部分应用底部有细小白边"
+      ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
       ui_print "- (如果不生效请尝试给予系统框架和系统桌面的root权限或关闭默认卸载)"
       immerse_gesture_cue_line $MODPATH
     else
       ui_print "- 已隐藏手势提示线，仅在默认主题下生效"
+      ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
       ui_print "- (如果不生效请尝试给予系统框架和系统桌面的root权限或关闭默认卸载)"
       hide_gesture_cue_line $MODPATH
     fi
@@ -752,6 +769,7 @@ if [[ "$API" -ge 34 ]]; then
   ui_print "- (需要Hyper OS 2才会生效)"
   ui_print "- (包括小米笔记AI、小米录音机AI和AI动态壁纸)"
   ui_print "- (不生效请给予对应系统应用root权限或关闭默认卸载)"
+  ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
@@ -788,6 +806,7 @@ if [[ "$is_need_patch_hdr_supportd" == 1 && "$API" -ge 35 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否开启 HDR 支持？"
   ui_print "- [重要提醒]不支持小米相册的HDR"
+  ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
   ui_print "*********************************************"
@@ -842,6 +861,7 @@ if [[ "$is_need_patch_overlay_img" == "true" ]] && [[ "$RootImplement" == "Kerne
   # 强制使用OverlayFS来尝试解决Overlay导致的系统界面异常
   ui_print "*********************************************"
   ui_print "- 是否强制使用OverlayFS来尝试解决模块Overlay导致的系统界面异常？"
+  ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
   ui_print "- (正常情况下不建议开启，KernelSU 本身就有自身的OverlayFS机制)"
   ui_print "- (如果您遇到系统界面异常抽搐，可以尝试强制使用OverlayFS来解决该问题)"
   ui_print "  音量+ ：是"
