@@ -3,7 +3,7 @@
 add_lines() {
   local content="$1"
   local file="$2"
-  printf "\n$content\n" >> "$file"
+  printf "\n$content\n" >>"$file"
 }
 
 key_check() {
@@ -130,21 +130,6 @@ patch_cn_google_services() {
   cp -rf "$1"/common/cn_google_services/* "$MODULE_CN_GOOGLE_SERVICES_PATH"
 }
 
-patch_120hz_fps() {
-  DEVICE_CODE="$(getprop ro.product.device)"
-  SYSTEM_DEVICE_FEATURES_PATH=/system/product/etc/device_features/${DEVICE_CODE}.xml
-  MODULE_DEVICE_FEATURES_PATH="$1"/system/product/etc/device_features/${DEVICE_CODE}.xml
-  if [[ -f "$MODULE_DEVICE_FEATURES_PATH" ]]; then
-    if grep -q '<integer name="support_max_fps">144<\/integer>' $MODULE_DEVICE_FEATURES_PATH; then
-      sed -i "$(awk '/<integer name="smart_fps_value">120<\/integer>/{print NR+2; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>144</item>" $MODULE_DEVICE_FEATURES_PATH
-      sed -i 's/<integer name="smart_fps_value">120<\/integer>/<integer name="smart_fps_value">144<\/integer>/g' $MODULE_DEVICE_FEATURES_PATH
-      sed -i '/<integer name="support_max_fps">144<\/integer>/d' $MODULE_DEVICE_FEATURES_PATH
-    else
-      sed -i "$(awk '/<integer name="smart_fps_value">144<\/integer>/{print NR+3; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    \    <item>120</item>" $MODULE_DEVICE_FEATURES_PATH
-    fi
-  fi
-}
-
 patch_project_treble_144hz() {
   DEVICE_CODE="$(getprop ro.product.device)"
   SYSTEM_DEVICE_FEATURES_PATH=/system/product/etc/device_features/${DEVICE_CODE}.xml
@@ -223,6 +208,9 @@ patch_eyecare_mode() {
   if [[ -f "$MODULE_DEVICE_FEATURES_PATH" ]]; then
     # 节律护眼
     sed -i "$(awk '/<\/features>/{print NR-0; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    <integer name=\"default_eyecare_mode\">2</integer>" $MODULE_DEVICE_FEATURES_PATH
+    if [[ "$API" -ge 36 ]]; then
+      sed -i "$(awk '/<\/features>/{print NR-0; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    <bool name=\"is_rhythmic_mode_v2_supported\">true</<bool>" $MODULE_DEVICE_FEATURES_PATH
+    fi
   fi
 }
 
@@ -362,7 +350,6 @@ patch_hdr_support() {
     sed -i "$(awk '/<\/features>/{print NR-0; exit}' $MODULE_DEVICE_FEATURES_PATH)i \    <bool name=\"support_displayfeature_gamemode_HDR\">true</bool>" $MODULE_DEVICE_FEATURES_PATH
   fi
 }
-
 
 pack_overlay() {
   touch "$1"/system/product/product_fs_config

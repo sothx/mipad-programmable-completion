@@ -14,6 +14,26 @@ if [[ "$KSU" == "true" ]]; then
     ui_print "! 请安装 KernelSU 管理器 v0.6.2 或更高版本"
     abort "*********************************************"
   fi
+  if [ "$KSU_VER_CODE" -gt 30000 ]; then
+    ui_print "- KernelSU 版本号高于 30000，检查元模块状态"
+    if [ -f "/data/adb/metamodule/module.prop" ]; then
+      # 元模块存在，检查是否被禁用
+      if [ -f "/data/adb/metamodule/disable" ]; then
+        ui_print "*********************************************"
+        ui_print "- 元模块已被禁用，请启用元模块后再尝试安装~"
+        abort "*********************************************"
+      fi
+      # 元模块存在且未禁用，正常继续安装流程（不执行abort）
+      ui_print "*********************************************"
+      ui_print "- 已检测到元模块且状态正常，进入模块安装流程~"
+      ui_print "*********************************************"
+    else
+      # 元模块不存在，终止安装并提示
+      ui_print "*********************************************"
+      ui_print "- 您未安装元模块，KernelSU 系管理器必须安装元模块才能正常使用~"
+      abort "*********************************************"
+    fi
+  fi
   RootImplement="KernelSU"
 elif [[ "$APATCH" == "true" ]]; then
   ui_print "- APatch 版本名: $APATCH_VER"
@@ -52,11 +72,11 @@ has_been_patch_device_features=0
 has_been_patch_perfinit_bdsize_zram=0
 
 # 补全多档高刷判断
-need_patch_full_fps_pad_list="pipa liuqin sheng"
+need_patch_full_fps_pad_list="pipa liuqin sheng piano uke muyu"
 is_need_patch_full_fps=$(check_device_is_need_patch "$device_code" "$need_patch_full_fps_pad_list")
 # 补全120hz判断
-need_patch_120hz_fps_pad_list="uke muyu"
-is_need_patch_120hz_fps=$(check_device_is_need_patch "$device_code" "$need_patch_120hz_fps_pad_list")
+# need_patch_120hz_fps_pad_list="uke muyu"
+# is_need_patch_120hz_fps=$(check_device_is_need_patch "$device_code" "$need_patch_120hz_fps_pad_list")
 # 节律护眼判断
 need_patch_eyecare_mode_pad_list="pipa liuqin yudi zizhan babylon dagu yunluo xun"
 is_need_patch_eyecare_mode=$(check_device_is_need_patch "$device_code" "$need_patch_eyecare_mode_pad_list")
@@ -425,7 +445,6 @@ if [[ "$project_treble_support_144hz" == 'true' ]]; then
   fi
 fi
 
-
 # 解锁多档高刷
 if [[ "$is_need_patch_full_fps" == 1 && "$project_treble_support_144hz" != 'true' ]]; then
   ui_print "*********************************************"
@@ -447,31 +466,6 @@ if [[ "$is_need_patch_full_fps" == 1 && "$project_treble_support_144hz" != 'true
     ui_print "- 已解锁多档高刷"
   else
     ui_print "- 你选择不解锁多档高刷"
-  fi
-fi
-
-# 解锁120hz
-if [[ "$is_need_patch_120hz_fps" == 1 && "$project_treble_support_144hz" != 'true' ]]; then
-  ui_print "*********************************************"
-  ui_print "- 是否解锁120hz高刷(移植包可能不兼容)"
-  ui_print "- [重要提示]在Android 15+会将高刷选项的默认行为还原为Android14时的显示效果"
-  ui_print "- [重要提示]解锁后不会出现\"最高到144hz\"的高刷选项，是正常的模块行为"
-  ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
-  ui_print "  音量+ ：是"
-  ui_print "  音量- ：否"
-  ui_print "*********************************************"
-  key_check
-  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    if [[ "$has_been_patch_device_features" == 0 ]]; then
-      has_been_patch_device_features=1
-      patch_device_features $MODPATH
-      add_lines 'patch_device_features $MODDIR' "$MODPATH"/post-fs-data.sh
-    fi
-    patch_120hz_fps $MODPATH
-    add_lines 'patch_120hz_fps $MODDIR' "$MODPATH"/post-fs-data.sh
-    ui_print "- 已解锁120hz高刷"
-  else
-    ui_print "- 你选择不解锁120hz高刷"
   fi
 fi
 
@@ -685,7 +679,7 @@ if [[ "$API" -ge 34 ]]; then
     ui_print "*********************************************"
     ui_print "- 需要沉浸还是隐藏优化手势提示线？(仅在默认主题下生效，Android 14+ 可用)"
     ui_print "- [重要提醒]沉浸手势提示线可能会导致部分应用底部有细小白边"
-  ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
+    ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
     ui_print "- (如果不生效请尝试给予系统框架和系统桌面的root权限或关闭默认卸载)"
     ui_print "  音量+ ：沉浸"
     ui_print "  音量- ：隐藏"
@@ -863,6 +857,7 @@ if [[ "$is_need_patch_overlay_img" == "true" ]] && [[ "$RootImplement" == "Kerne
   ui_print "- 是否强制使用OverlayFS来尝试解决模块Overlay导致的系统界面异常？"
   ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
   ui_print "- (正常情况下不建议开启，KernelSU 本身就有自身的OverlayFS机制)"
+  ui_print "- (KernelSu 3.0 已经安装了元模块的情况下，一般无需开启此功能)"
   ui_print "- (如果您遇到系统界面异常抽搐，可以尝试强制使用OverlayFS来解决该问题)"
   ui_print "  音量+ ：是"
   ui_print "  音量- ：否"
