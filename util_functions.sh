@@ -335,9 +335,11 @@ patch_perfinit_bdsize_zram() {
 
 patch_zram_config() {
   MODULE_PERFINIT_BDSIZE_ZRAM_PATH="$1"/system/system_ext/etc/perfinit_bdsize_zram.conf
-  DEVICE_CODE="$(getprop ro.product.device)"
-  MODULE_ZRAM_TEMPLATE="$1"/common/zram_template/"$DEVICE_CODE".json
-  $JQ_UTILS '.zram += [input | {product_name, zram_size}]' $MODULE_PERFINIT_BDSIZE_ZRAM_PATH $MODULE_ZRAM_TEMPLATE >temp.json && mv temp.json $MODULE_PERFINIT_BDSIZE_ZRAM_PATH
+  MODULE_ZRAM_CONF_PATH="$1"/common/zram_conf/perfinit_bdsize_zram.conf
+  cp -rf "$MODULE_ZRAM_CONF_PATH" "MODULE_PERFINIT_BDSIZE_ZRAM_PATH"
+  # DEVICE_CODE="$(getprop ro.product.device)"
+  # MODULE_ZRAM_TEMPLATE="$1"/common/zram_template/"$DEVICE_CODE".json
+  # $JQ_UTILS '.zram += [input | {product_name, zram_size}]' $MODULE_PERFINIT_BDSIZE_ZRAM_PATH $MODULE_ZRAM_TEMPLATE >temp.json && mv temp.json $MODULE_PERFINIT_BDSIZE_ZRAM_PATH
 }
 
 patch_hdr_support() {

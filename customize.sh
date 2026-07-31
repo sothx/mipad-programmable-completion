@@ -86,9 +86,9 @@ is_need_patch_desktop_mode=$(check_device_is_need_patch "$device_code" "$need_pa
 # 不支持高级材质机型判断
 un_need_patch_background_blur_pad_list="dizi ruan"
 is_un_need_patch_background_blur=$(check_device_is_need_patch "$device_code" "$un_need_patch_background_blur_pad_list")
-# 优化线程判断
-need_patch_threads_pad_list="nabu enuma elish dagu pipa"
-is_need_patch_threads_pad_list=$(check_device_is_need_patch "$device_code" "$need_patch_threads_pad_list")
+# # 优化线程判断
+# need_patch_threads_pad_list="nabu enuma elish dagu pipa"
+# is_need_patch_threads_pad_list=$(check_device_is_need_patch "$device_code" "$need_patch_threads_pad_list")
 # ZRAM:RAM 1:1内存优化
 need_patch_zram_pad_list="liuqin yudi pipa nabu elish dagu enuma"
 is_need_patch_zram=$(check_device_is_need_patch "$device_code" "$need_patch_zram_pad_list")
@@ -189,23 +189,23 @@ if [[ "$device_type" == "redmi" ]]; then
 fi
 
 # 优化动画线程调度
-if [[ "$device_type" == "redmi" || "$is_need_patch_threads_pad_list" == 1 ]]; then
-  ui_print "*********************************************"
-  ui_print "- 是否优化动画线程调度"
-  ui_print "- [重要提醒]可以一定程度改善系统动画渲染时线程调度的流畅度"
-  ui_print "  音量+ ：是"
-  ui_print "  音量- ：否"
-  ui_print "*********************************************"
-  key_check
-  if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
-    ui_print "- 已优化动画线程调度"
-    add_lines "# 优化动画线程调度" "$MODPATH"/system.prop
-    add_lines "persist.sys.miui_animator_sched.sched_threads=2" "$MODPATH"/system.prop
-    add_lines "persist.vendor.display.miui.composer_boost=4-7" "$MODPATH"/system.prop
-  else
-    ui_print "- 你选择不优化动画线程调度"
-  fi
-fi
+# if [[ "$device_type" == "redmi" || "$is_need_patch_threads_pad_list" == 1 ]]; then
+#   ui_print "*********************************************"
+#   ui_print "- 是否优化动画线程调度"
+#   ui_print "- [重要提醒]可以一定程度改善系统动画渲染时线程调度的流畅度"
+#   ui_print "  音量+ ：是"
+#   ui_print "  音量- ：否"
+#   ui_print "*********************************************"
+#   key_check
+#   if [[ "$keycheck" == "KEY_VOLUMEUP" ]]; then
+#     ui_print "- 已优化动画线程调度"
+#     add_lines "# 优化动画线程调度" "$MODPATH"/system.prop
+#     add_lines "persist.sys.miui_animator_sched.sched_threads=2" "$MODPATH"/system.prop
+#     add_lines "persist.vendor.display.miui.composer_boost=4-7" "$MODPATH"/system.prop
+#   else
+#     ui_print "- 你选择不优化动画线程调度"
+#   fi
+# fi
 
 # 解锁工作台模式
 if [[ "$is_need_patch_desktop_mode" == 1 && "$API" -ge 34 ]]; then
