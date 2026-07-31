@@ -239,7 +239,7 @@ if [[ "$is_need_patch_desktop_mode" == 1 && "$API" -ge 34 ]]; then
 fi
 
 # ZRAM:RAM=1:1 内存优化
-if [[ "$is_need_patch_zram" == 1 && "$API" -ge 35 ]]; then
+if [[ "$is_need_patch_zram" == 1 && "$API" -eq 35 ]]; then
   ui_print "*********************************************"
   ui_print "- 是否启用 ZRAM:RAM=1:1 内存优化?（第三方内核可能不生效）"
   ui_print "- [重要提醒]内存优化最大兼容 ZRAM 为 16G"
@@ -254,13 +254,15 @@ if [[ "$is_need_patch_zram" == 1 && "$API" -ge 35 ]]; then
     ui_print "- [重要提醒]内存优化最大兼容 ZRAM 为 16G"
     ui_print "- [重要提醒]可能会与其他内存相关模块冲突导致不生效"
     ui_print "- [重要提醒]未解锁BL锁的临时root请勿开启此功能，可能会导致意料之外的问题"
-    if [[ "$has_been_patch_perfinit_bdsize_zram" == 0 ]]; then
-      has_been_patch_perfinit_bdsize_zram=1
-      patch_perfinit_bdsize_zram $MODPATH
-      add_lines 'patch_perfinit_bdsize_zram $MODDIR' "$MODPATH"/service.sh
-    fi
-    patch_zram_config $MODPATH
-    add_lines 'patch_zram_config $MODDIR' "$MODPATH"/service.sh
+    patch_perfinit_bdsize_zram $MODPATH
+    add_lines 'patch_perfinit_bdsize_zram $MODDIR' "$MODPATH"/service.sh
+    # if [[ "$has_been_patch_perfinit_bdsize_zram" == 0 ]]; then
+    #   has_been_patch_perfinit_bdsize_zram=1
+    #   patch_perfinit_bdsize_zram $MODPATH
+    #   add_lines 'patch_perfinit_bdsize_zram $MODDIR' "$MODPATH"/service.sh
+    # fi
+    # patch_zram_config $MODPATH
+    # add_lines 'patch_zram_config $MODDIR' "$MODPATH"/service.sh
   else
     ui_print "- 你选择不启用 ZRAM:RAM=1:1 内存优化"
   fi

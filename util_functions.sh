@@ -317,10 +317,8 @@ patch_aon_proximity_available() {
 }
 
 patch_perfinit_bdsize_zram() {
-  DEVICE_CODE="$(getprop ro.product.device)"
-  SYSTEM_PERFINIT_BDSIZE_ZRAM_PATH=/system/system_ext/etc/perfinit_bdsize_zram.conf
+  MODULE_ZRAM_CONFIG_PATH="$1"/common/zram_conf/perfinit_bdsize_zram.conf
   MODULE_PERFINIT_BDSIZE_ZRAM_PATH="$1"/system/system_ext/etc/perfinit_bdsize_zram.conf
-  JQ_UTILS="$1"/common/utils/jq
 
   if [[ ! -d "$1"/system/system_ext/etc/ ]]; then
     mkdir -p "$1"/system/system_ext/etc/
@@ -330,17 +328,29 @@ patch_perfinit_bdsize_zram() {
   rm -rf "$MODULE_PERFINIT_BDSIZE_ZRAM_PATH"
 
   # 复制系统内配置到模块内
-  cp -f "$SYSTEM_PERFINIT_BDSIZE_ZRAM_PATH" "$MODULE_PERFINIT_BDSIZE_ZRAM_PATH"
+  cp -f "$MODULE_ZRAM_CONFIG_PATH" "$MODULE_PERFINIT_BDSIZE_ZRAM_PATH"
+  # DEVICE_CODE="$(getprop ro.product.device)"
+  # SYSTEM_PERFINIT_BDSIZE_ZRAM_PATH=/system/system_ext/etc/perfinit_bdsize_zram.conf
+  # MODULE_PERFINIT_BDSIZE_ZRAM_PATH="$1"/system/system_ext/etc/perfinit_bdsize_zram.conf
+  # JQ_UTILS="$1"/common/utils/jq
+
+  # if [[ ! -d "$1"/system/system_ext/etc/ ]]; then
+  #   mkdir -p "$1"/system/system_ext/etc/
+  # fi
+
+  # # 移除旧版补丁文件
+  # rm -rf "$MODULE_PERFINIT_BDSIZE_ZRAM_PATH"
+
+  # # 复制系统内配置到模块内
+  # cp -f "$SYSTEM_PERFINIT_BDSIZE_ZRAM_PATH" "$MODULE_PERFINIT_BDSIZE_ZRAM_PATH"
 }
 
-patch_zram_config() {
-  MODULE_PERFINIT_BDSIZE_ZRAM_PATH="$1"/system/system_ext/etc/perfinit_bdsize_zram.conf
-  MODULE_ZRAM_CONF_PATH="$1"/common/zram_conf/perfinit_bdsize_zram.conf
-  cp -rf "$MODULE_ZRAM_CONF_PATH" "MODULE_PERFINIT_BDSIZE_ZRAM_PATH"
-  # DEVICE_CODE="$(getprop ro.product.device)"
-  # MODULE_ZRAM_TEMPLATE="$1"/common/zram_template/"$DEVICE_CODE".json
-  # $JQ_UTILS '.zram += [input | {product_name, zram_size}]' $MODULE_PERFINIT_BDSIZE_ZRAM_PATH $MODULE_ZRAM_TEMPLATE >temp.json && mv temp.json $MODULE_PERFINIT_BDSIZE_ZRAM_PATH
-}
+# patch_zram_config() {
+#   MODULE_PERFINIT_BDSIZE_ZRAM_PATH="$1"/system/system_ext/etc/perfinit_bdsize_zram.conf
+#   DEVICE_CODE="$(getprop ro.product.device)"
+#   MODULE_ZRAM_TEMPLATE="$1"/common/zram_template/"$DEVICE_CODE".json
+#   $JQ_UTILS '.zram += [input | {product_name, zram_size}]' $MODULE_PERFINIT_BDSIZE_ZRAM_PATH $MODULE_ZRAM_TEMPLATE >temp.json && mv temp.json $MODULE_PERFINIT_BDSIZE_ZRAM_PATH
+# }
 
 patch_hdr_support() {
   DEVICE_CODE="$(getprop ro.product.device)"
